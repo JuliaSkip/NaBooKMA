@@ -14,7 +14,6 @@
     border: 2px solid black;
     outline: none;
 }
-
 button{
     background-color: rgba(145, 85, 61, 0.5);
     width: 10%;
@@ -31,11 +30,11 @@ button{
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     width: 80%;
-    margin-top: 100px;
+    margin-top: 150px;
     gap: 20px;
+    row-gap: 50px;
     margin-left: 10%;
 }
-
 .customer-card {
     background-color: rgba(145, 85, 61, 0.5);
     border-radius: 8px;
@@ -51,28 +50,25 @@ button{
     transform: scale(1.03);
     z-index: 2;
 }
-
 .customer-card h2 {
     margin-bottom: 10px;
     font-size: 18px;
 }
-
 .customer-card p {
     margin: 5px 0;
     font-size: 14px;
     text-align: center;
 }
-
 .customer-photo {
     width: 80px;
     height: 80px;
+    object-fit: cover;
     margin-left: 1%;
+    margin-top: -20%;
     border-radius: 50%;
     margin-bottom: 10px;
     border: 1px solid black;
 }
-
-
 
 
 .overlay {
@@ -84,7 +80,6 @@ button{
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 9999;
 }
-
 .popup-container-cust {
     position: fixed;
     top: 0;
@@ -96,22 +91,26 @@ button{
     align-items: center;
     z-index: 10000;
 }
-
 .popup {
     background-color: #a3966a;
+    width: 30%;
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
 .popup-content-cust {
     text-align: center;
 }
-
 .close {
     margin-left: 90%;
     cursor: pointer;
     color: black;
+    font-size: 20px;
+}
+.popup .customer-photo:active{
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
 }
 
 

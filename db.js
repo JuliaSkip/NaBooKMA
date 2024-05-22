@@ -9,6 +9,10 @@ const db = pgp(cn);
 
 app.use(cors());
 app.use(express.json());
+app.get('/images/:imageName', (req, res) => {
+    const { imageName } = req.params;
+    res.sendFile(`/path/to/images/${imageName}`, { root: __dirname });
+});
 
 app.get('/get-customers', (req, res) =>{
     const { sortBy, sortOrder } = req.query;

@@ -38,7 +38,8 @@ function CustomerPage() {
     };
 
     const filteredCustomers = customers.filter(customer =>
-        customer.cust_surname.toLowerCase().startsWith(searchQuery.toLowerCase())
+        customer.cust_surname.toLowerCase().startsWith(searchQuery.toLowerCase()) &&
+        customer.cust_surname.toLowerCase() !== "admin"
     );
 
     const handleSort = (columnName) => {
@@ -121,14 +122,14 @@ function CustomerPage() {
                                 <p>Birth date: {formatDate(popupCustomer.birth_date)}</p>
                                 <p>Email: {popupCustomer.customer_email}</p>
                                 <p>Phone: {popupCustomer.phone_number}</p>
-                                <p>Address: {popupCustomer.city} {popupCustomer.street} {popupCustomer.zip_code}</p>
+                                <p>Address: {popupCustomer.city} {popupCustomer.street}, {popupCustomer.zip_code}</p>
                             </div>
                         </div>
                     </div>
                 </>
             )}
             {fetchError && <div>Error: {fetchError}</div>}
-            {filteredCustomers.length === 0 && <div className="error-message"><h2>No categories found.</h2></div>}
+            {filteredCustomers.length === 0 && <div className="error-message"><h2>No customers found.</h2></div>}
             {filteredCustomers.length !== 0 &&
                 <footer className="footer">
                     <div className="contact-info">
