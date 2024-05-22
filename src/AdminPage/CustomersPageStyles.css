@@ -1,0 +1,132 @@
+.search-bar-customers {
+    width: 32.2%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid black;
+    background-color: #f1daae;
+    border-radius: 10px;
+    font-size: 16px;
+    position: relative;
+    top: 100px;
+    left: 10.25%;
+}
+.search-bar-customers:focus {
+    border: 2px solid black;
+    outline: none;
+}
+
+button{
+    background-color: rgba(145, 85, 61, 0.5);
+    width: 10%;
+    border: 1px solid black;
+    padding: 8px;
+    margin: 10px;
+    border-radius: 10px;
+    font-size: 16px;
+    position: relative;
+    top: 100px;
+    left: 10%;
+}
+.customer-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    width: 80%;
+    margin-top: 100px;
+    gap: 20px;
+    margin-left: 10%;
+}
+
+.customer-card {
+    background-color: rgba(145, 85, 61, 0.5);
+    border-radius: 8px;
+    border: 1px solid black;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.customer-card:hover {
+    background-image: linear-gradient(to top, rgba(145, 85, 61, 0.5) 0%, rgba(68, 30, 15, 0.5) 50%, transparent 100%);
+    transform: scale(1.03);
+    z-index: 2;
+}
+
+.customer-card h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.customer-card p {
+    margin: 5px 0;
+    font-size: 14px;
+    text-align: center;
+}
+
+.customer-photo {
+    width: 80px;
+    height: 80px;
+    margin-left: 1%;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 1px solid black;
+}
+
+
+
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
+
+.popup-container-cust {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.popup {
+    background-color: #a3966a;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.popup-content-cust {
+    text-align: center;
+}
+
+.close {
+    margin-left: 90%;
+    cursor: pointer;
+    color: black;
+}
+
+
+
+.contact-info hr{
+    width: 120%;
+    margin-left: -10%;
+}
+.footer {
+    color: black;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    top: 50%;
+    left: 0;
+    right: 0;
+}
