@@ -1,0 +1,188 @@
+.search-bar-checks {
+    width: 32.2%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid black;
+    background-color: #f1daae;
+    border-radius: 10px;
+    font-size: 16px;
+    position: relative;
+    top: 100px;
+    left: 10.25%;
+}
+.search-bar-checks:focus {
+    border: 2px solid black;
+    outline: none;
+}
+.sort-checks{
+    background-color: rgba(145, 85, 61, 0.5);
+    width: 12%;
+    border: 1px solid black;
+    padding: 8px;
+    margin: 10px;
+    border-radius: 10px;
+    font-size: 16px;
+    position: relative;
+    top: 100px;
+    left: 10%;
+}
+
+
+
+
+.check.page {
+    padding: 20px;
+    margin-top: 100px;
+    margin-left: 9%;
+}
+.check-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 250px));
+    gap: 20px;
+}
+.check-card {
+    background-image: linear-gradient(to top, rgba(229, 236, 248, 0.32) 0%, rgba(225, 235, 248, 0.84) 50%, transparent 100%);
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.check-card:hover{
+    transform: scale(1.03);
+    z-index: 2;
+}
+.check-card h3 {
+    margin-top: 5%;
+}
+.print-date{
+    margin-top: -33%;
+    margin-left: -5%;
+    color: #42454b;
+}
+.total-price{
+    margin-top: 25%;
+    margin-left: 50%;
+    margin-bottom: -11%;
+}
+.open-check{
+    background-image: linear-gradient(to top, rgba(229, 236, 248, 0.32) 0%, rgba(104, 224, 93, 0.84) 50%, transparent 100%);
+    border: 1px solid black;
+    padding: 8px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-top: -15%;
+    margin-left: 5%;
+}
+
+
+
+.total-check {
+    position: fixed;
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    z-index: 9999;
+    overflow-y: auto;
+    height: 100vh;
+    padding: 20px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.12);
+    border: 1px solid #ccc;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+.receipt {
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    width: 300px;
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: 5%;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 999;
+}
+.zigzag-top {
+    position: relative;
+    height: 15px;
+    top: -32px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 10 10" preserveAspectRatio="none"><path d="M0 0 L5 10 L10 0 Z" fill="rgba(255, 255, 255, 1)"/></svg>');
+    background-repeat: repeat-x;
+    background-position: top;
+    width: 339px;
+    margin-left: -19.5px;
+    transform: rotate(180deg);
+}
+.zigzag-bottom {
+    position: relative;
+    height: 15px;
+    top: 32px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 10 10" preserveAspectRatio="none"><path d="M0 0 L5 10 L10 0 Z" fill="rgba(255, 255, 255, 1)"/></svg>');
+    background-repeat: repeat-x;
+    background-position: top;
+    width: 339px;
+    margin-left: -19.5px;
+}
+
+.header {
+    text-align: center;
+    display: block;
+}
+
+.items, .total, .payment, .vat, .barcode {
+    margin-bottom: 10px;
+}
+.item {
+    display: flex;
+    justify-content: space-between;
+    margin-top: -8%;
+}
+.vat-rates {
+    display: flex;
+    justify-content: space-between;
+}
+.delimiter{
+    margin-top: -2%;
+    margin-bottom: 2%;
+}
+.date-bar{
+    width: 10%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-right: 1%;
+}
+.total-sales-section p {
+    font-size: 25px;
+    color: #333;
+}
+.book-name {
+    position: relative;
+    display: inline-block;
+}
+.book-image {
+    display: none;
+    width: 20%;
+    height: 50%;
+    border: 1px solid #ddd;
+    z-index: 1;
+    position: fixed;
+    top: 27%;
+    left: 10%;
+}
+.book-summary {
+    display: none;
+    width: 20%;
+    height: 50%;
+    z-index: 1;
+    position: fixed;
+    top: 27%;
+    left: 71%;
+}
+.book-name:hover .book-image, .book-name:hover .book-summary{
+    display: block;
+}

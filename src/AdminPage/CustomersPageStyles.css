@@ -14,7 +14,7 @@
     border: 2px solid black;
     outline: none;
 }
-button{
+.sort-customers{
     background-color: rgba(145, 85, 61, 0.5);
     width: 10%;
     border: 1px solid black;
@@ -107,7 +107,7 @@ button{
     color: black;
     font-size: 20px;
 }
-.popup .customer-photo:active{
+.popup .customer-photo:hover{
     width: 300px;
     height: 300px;
     object-fit: cover;
