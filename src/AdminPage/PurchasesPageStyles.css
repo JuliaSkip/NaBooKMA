@@ -74,6 +74,39 @@
     margin-left: 5%;
 }
 
+.completed{
+    position: relative;
+    top: 10px;
+    left: 70%;
+    width: 35%;
+    border: 1px solid black;
+    text-align: center;
+    background-color: rgba(104, 224, 93);
+    border-radius: 5px;
+    z-index: 999;
+}
+.pending{
+    position: relative;
+    top: 10px;
+    left: 70%;
+    width: 35%;
+    border: 1px solid black;
+    text-align: center;
+    background-color: rgb(224, 93, 93);
+    border-radius: 5px;
+    z-index: 999;
+}
+.processing{
+    position: relative;
+    top: 10px;
+    left: 70%;
+    width: 35%;
+    border: 1px solid black;
+    text-align: center;
+    background-color: rgba(224, 207, 93);
+    border-radius: 5px;
+    z-index: 999;
+}
 
 
 .total-check {

@@ -11,6 +11,8 @@ function PurchasesPage() {
     const [sortBy, setSortBy] = useState("check_number");
     const [sortOrder, setSortOrder] = useState("ASC");
     const [searchQuery, setSearchQuery] = useState("");
+    const [filter, setFilter] = useState("all"); // State for filter
+
 
     const fetchChecks = async () => {
         try {
@@ -75,9 +77,33 @@ function PurchasesPage() {
         setShowPopup(false);
     };
 
-    let filteredChecks = checks ? (searchQuery.trim() === '' ? checks : checks.filter(check =>
-        check.check_number.toString().trim() === searchQuery.trim()
-    )) : [];
+    const handleStatusChange = async (status, check_num) => {
+        try {
+            const response = await fetch(`http://localhost:8081/update-status?check_number=${check_num}&status=${status.target.value}`, {
+                method: 'PUT'
+        });
+            fetchChecks();
+        } catch (error) {
+            setFetchError("An error occurred while updating the status. Please try again.");
+        }
+    };
+
+    let filteredChecks;
+    if(filter === "all") {
+        filteredChecks = checks ? (searchQuery.trim() === '' ? checks : checks.filter(check =>
+            check.check_number.toString().trim() === searchQuery.trim()
+        )) : [];
+    }else{
+        filteredChecks = checks ? (searchQuery.trim() === '' ? checks.filter(check =>
+            check.status === filter) : checks.filter(check =>
+            check.check_number.toString().trim() === searchQuery.trim() && check.status === filter
+        )) : [];
+    }
+
+
+    const handleFilter = (status) => {
+        setFilter(status);
+    };
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -108,6 +134,15 @@ function PurchasesPage() {
                     onChange={handleSearch}
                     className="search-bar-checks"
                 />
+                {searchQuery === "" && (
+                    <select className="sort-checks" value={filter}
+                            onChange={(e) => handleFilter(e.target.value)}>
+                        <option value="all">All</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                )}
                 <button className="sort-checks" onClick={() => handleSort("check_number")}>
                     Sort by check number
                 </button>
@@ -115,13 +150,23 @@ function PurchasesPage() {
             <div className="check page">
                 <div className="check-cards">
                     {filteredChecks.map((check) => (
-                        <div className="check-card" key={check.check_number}>
-                            <h3>Check № {check.check_number}</h3>
-                            <p className="print-date">{formatDate(check.print_date)}</p>
-                            <p className="total-price">{check.total_price} грн</p>
-                            <button className="open-check" onClick={() => handleOpenPopup(check)}>
+                        <div>
+                            <div>
+                                <select className={check.status} value={check.status}
+                                        onChange={(e) => handleStatusChange(e, check.check_number)}>
+                                    <option value="pending">Pending</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                            </div>
+                            <div className="check-card" key={check.check_number}>
+                                <h3>Check № {check.check_number}</h3>
+                                <p className="print-date">{formatDate(check.print_date)}</p>
+                                <p className="total-price">{check.total_price} грн</p>
+                                <button className="open-check" onClick={() => handleOpenPopup(check)}>
                                 ⇲
                             </button>
+                        </div>
                         </div>
                     ))}
                 </div>
@@ -143,11 +188,11 @@ function PurchasesPage() {
                                     </p>
                                 </div>
                                 <div className="item">
-                                    <p>Check №</p>
+                                    <p>Check №:</p>
                                     <p>{selectedCheck.check_number}</p>
                                 </div>
                                 <div className="item">
-                                    <p>Status</p>
+                                    <p>Status:</p>
                                     <p>{selectedCheck.status}</p>
                                 </div>
                                 <div className="item">

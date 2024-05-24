@@ -59,7 +59,20 @@ app.get('/get-purchases', (req, res) =>{
             res.status(500).json({error:error.message});
         });
 });
-
+app.put('/update-status', (req, res) => {
+    const { check_number, status  } = req.query;
+    const number = `${check_number}`;
+    const newStatus = `${status}`
+    db.none(`UPDATE "Check"
+                    SET status = $1
+                    WHERE check_number = $2;`, [newStatus, number])
+        .then(() => {
+            res.json({ message: 'Check updated successfully' });
+        })
+        .catch(error => {
+            res.status(500).json({ error: error.message });
+        });
+});
 /*
 * *
 * *
