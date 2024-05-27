@@ -1,0 +1,224 @@
+.search-bar-books {
+    width: 32.2%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #f1daae;
+    background-color: #f1daae;
+    border-radius: 10px;
+    font-size: 16px;
+    position: relative;
+    top: 100px;
+    left: 10.25%;
+}
+.search-bar-books:focus {
+    border: 2px solid black;
+    outline: none;
+}
+.sort-books{
+    background-color: rgba(232, 152, 38, 0.62);
+    width: 10%;
+    border: 1px solid rgba(239, 182, 99, 0.62);
+    padding: 8px;
+    margin: 10px;
+    border-radius: 10px;
+    font-size: 16px;
+    position: relative;
+    top: 100px;
+    left: 10%;
+    color:rgba(0, 0, 0, 0.75);
+}
+.language-select {
+    background-color: rgba(232, 152, 38, 0.62);
+    width: 10%;
+    border: 1px solid rgba(239, 182, 99, 0.62);
+    padding: 8px;
+    margin: 10px;
+    border-radius: 10px;
+    font-size: 16px;
+    position: relative;
+    top: 100px;
+    left: 10%;
+    color:rgba(0, 0, 0, 0.75);
+    text-align: center;
+}
+
+.category-buttons {
+    width:200px;
+    height:200px;
+    margin: 50px 0 -150px 10%;
+}
+.categories-photo{
+    width: 150px;
+    height: 120px;
+}
+.category-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.category-buttons button,
+.category-buttons div {
+    margin-right: 10px;
+}
+
+
+
+
+.book-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    width: 80%;
+    margin-top: 150px;
+    gap: 60px;
+    row-gap: 50px;
+    margin-left: 10%;
+}
+.book-card {
+    background-color:rgba(232, 152, 38, 0.62);
+    border-radius: 8px;
+    color: rgba(0, 0, 0, 0.75);
+    width: 250px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.book-card:hover {
+    background-color: rgba(227, 167, 80, 0.62);
+    transform: scale(1.03);
+    z-index: 2;
+}
+.book-card {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.book-card:hover {
+    border: 2px solid rgba(227, 167, 80, 0.62);
+    box-shadow: 0 4px 15px rgba(227, 167, 80, 0.62);
+    transform: scale(1.03);
+    z-index: 2;
+}
+
+.book-photo {
+    width: 150px;
+    height: 200px;
+    object-fit: cover;
+    margin-left: 1%;
+    margin-top: 5%;
+    margin-bottom: 10px;
+    border: 1px solid black;
+}
+
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
+.popup-container-book {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+.popup {
+    background-color: rgb(213, 154, 89);
+    width: 30%;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color:rgba(0, 0, 0, 0.75);
+}
+.popup-content-book {
+    text-align: center;
+}
+.close {
+    margin-left: 90%;
+    cursor: pointer;
+    color: black;
+    font-size: 20px;
+}
+.popup .book-photo:hover{
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+}
+.contact-info hr{
+    width: 120%;
+    margin-left: -10%;
+}
+.footer {
+    color: rgba(0, 0, 0, 0.75);
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    top: 50%;
+    left: 0;
+    right: 0;
+}
+body{
+    background-color: #dad9c3;
+}
+.book-card {
+    background-color: rgba(232, 152, 38, 0.62);
+    border-radius: 8px;
+    color: rgba(0, 0, 0, 0.75);
+    padding: 20px;
+    padding-right:40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    position: relative;
+}
+
+.book-card:hover {
+    background-color: rgba(227, 167, 80, 0.62);
+    border: 2px solid rgba(227, 167, 80, 0.62);
+    box-shadow: 0 4px 15px rgba(227, 167, 80, 0.62);
+    transform: scale(1.03);
+    z-index: 2;
+}
+.book-info {
+    margin-top: 10px;
+
+    width:250px;
+}
+
+.book-card h2 {
+    font-size: 18px;
+    text-align:center;
+}
+
+.book-card p {
+    font-size: 14px;
+    text-align: left;
+    margin: 1px 0;
+    margin-left:10px;
+}
+
+.star-icon {
+    width: 20px;
+    height: 20px;
+    margin-left:2px;
+    margin-bottom:1px;
+    align-items: center;
+}
+.rating{
+    margin-left:5px;
+    margin-top:10px;
+}
+.price{
+    font-size:25px;
+    font-weight:bold;
+}
