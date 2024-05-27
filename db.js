@@ -73,6 +73,20 @@ app.put('/update-status', (req, res) => {
             res.status(500).json({ error: error.message });
         });
 });
+
+app.get('/get-books', (req, res) =>{
+    const { sortBy, sortOrder } = req.query;
+    const orderBy = `${sortBy} ${sortOrder}`;
+    db.any(`SELECT *
+                  FROM "Books"
+                  ORDER BY ${orderBy};`)
+        .then(result =>{
+            res.json(result);
+        })
+        .catch(error => {
+            res.status(500).json({error:error.message});
+        });
+});
 /*
 * *
 * *

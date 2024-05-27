@@ -2,7 +2,7 @@
     width: 32.2%;
     padding: 10px;
     margin-bottom: 20px;
-    border: 1px solid black;
+    border: 1px solid #f1daae;
     background-color: #f1daae;
     border-radius: 10px;
     font-size: 16px;
@@ -15,9 +15,9 @@
     outline: none;
 }
 .sort-checks{
-    background-color: rgba(145, 85, 61, 0.5);
+    background-color: rgba(232, 152, 38, 0.62);
     width: 12%;
-    border: 1px solid black;
+    border: 1px solid rgba(232, 152, 38, 0.62);
     padding: 8px;
     margin: 10px;
     border-radius: 10px;
@@ -41,10 +41,10 @@
     gap: 20px;
 }
 .check-card {
-    background-image: linear-gradient(to top, rgba(229, 236, 248, 0.32) 0%, rgba(225, 235, 248, 0.84) 50%, transparent 100%);
-    border: 1px solid black;
+    background-color: #e3dfdf;
+    color: rgba(0, 0, 0, 0.75);
     border-radius: 8px;
-    padding: 20px;
+    padding: 30px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 .check-card:hover{
@@ -53,6 +53,7 @@
 }
 .check-card h3 {
     margin-top: 5%;
+    color: rgba(0, 0, 0, 0.75);
 }
 .print-date{
     margin-top: -33%;
@@ -65,8 +66,9 @@
     margin-bottom: -11%;
 }
 .open-check{
-    background-image: linear-gradient(to top, rgba(229, 236, 248, 0.32) 0%, rgba(104, 224, 93, 0.84) 50%, transparent 100%);
-    border: 1px solid black;
+    background-color: rgba(62, 147, 29, 0.84);
+    border: 1px solid rgba(0, 0, 0, 0.75);
+    color: rgba(0, 0, 0, 0.75);
     padding: 8px;
     border-radius: 10px;
     font-size: 13px;
@@ -79,9 +81,10 @@
     top: 10px;
     left: 70%;
     width: 35%;
-    border: 1px solid black;
+    border: 1px solid rgba(62, 147, 29, 0.84);
     text-align: center;
-    background-color: rgba(104, 224, 93);
+    color: rgba(0, 0, 0, 0.75);
+    background-color: rgba(62, 147, 29, 0.84);
     border-radius: 5px;
     z-index: 999;
 }
@@ -90,9 +93,10 @@
     top: 10px;
     left: 70%;
     width: 35%;
-    border: 1px solid black;
+    color: rgba(0, 0, 0, 0.75);
+    border: 1px solid rgb(182, 84, 84);
     text-align: center;
-    background-color: rgb(224, 93, 93);
+    background-color: rgb(182, 84, 84);
     border-radius: 5px;
     z-index: 999;
 }
@@ -101,9 +105,10 @@
     top: 10px;
     left: 70%;
     width: 35%;
-    border: 1px solid black;
+    color: rgba(0, 0, 0, 0.75);
+    border: 1px solid rgb(222, 206, 115);
     text-align: center;
-    background-color: rgba(224, 207, 93);
+    background-color: rgb(222, 206, 115);
     border-radius: 5px;
     z-index: 999;
 }

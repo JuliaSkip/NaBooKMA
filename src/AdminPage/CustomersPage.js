@@ -33,8 +33,7 @@ function CustomerPage() {
     }, [sortBy, sortOrder]);
 
     const handleSearch = (e) => {
-        const query = e.target.value;
-        setSearchQuery(query);
+        setSearchQuery(e.target.value);
     };
 
     const filteredCustomers = customers.filter(customer =>
@@ -68,7 +67,7 @@ function CustomerPage() {
 
     return (
         <div>
-            <MenuBar/>
+            <MenuBar />
             <div>
                 <input
                     type="text"
@@ -98,9 +97,11 @@ function CustomerPage() {
                                 className="customer-photo"
                             />
                         )}
-                        <h2>{customer.cust_name} {customer.cust_surname}</h2>
-                        <p>Email: {customer.customer_email}</p>
-                        <p>Phone: {customer.phone_number}</p>
+                        <div className="customer-info">
+                            <h2>{customer.cust_name} {customer.cust_surname}</h2>
+                            <p>Email: {customer.customer_email}</p>
+                            <p>Phone: {customer.phone_number}</p>
+                        </div>
                     </div>
                 ))}
             </div>
