@@ -118,7 +118,7 @@ function BooksPage() {
                     className="language-select"
                 >
                     <option value="all">All</option>
-                    <option value="Ukrainian">Ukrainian</option>
+                    <option value="Українська">Українська</option>
                     <option value="English">English</option>
                 </select>
             </div>
