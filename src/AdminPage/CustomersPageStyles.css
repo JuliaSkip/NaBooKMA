@@ -82,6 +82,16 @@
     margin-bottom: 10px;
     border: 1px solid black;
 }
+.customer-photo-popup{
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin-left: 1%;
+    margin-top: -20%;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 1px solid black;
+}
 
 
 .overlay {
@@ -102,9 +112,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10000;
+    z-index: 9999;
 }
-.popup {
+.popup-cust {
     background-color: rgb(213, 154, 89);
     width: 30%;
     border-radius: 8px;
@@ -121,13 +131,11 @@
     color: black;
     font-size: 20px;
 }
-.popup .customer-photo:hover{
+.customer-photo-popup:hover{
     width: 300px;
     height: 300px;
     object-fit: cover;
 }
-
-
 
 .contact-info hr{
     width: 120%;

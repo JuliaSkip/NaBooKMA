@@ -1,0 +1,107 @@
+.main {
+    margin-top: 10%;
+    margin-left: 31%;
+    margin-right: 5%;
+
+}
+ body {
+     margin: 0;
+     padding: 0;
+     height: 100%;
+     background-image: linear-gradient(to top, rgba(168, 144, 109, 0.62), rgba(232, 152, 38, 0.62) 50%, transparent 100%);
+     background-attachment: fixed;
+ }
+.full-form {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px 35px 20px 30px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background-color: #f1f1ec;
+    color: white;
+    border-color: #f1f1ec;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    margin-top:20%;
+    width:50%;
+    border-radius: 3px;
+    justify-content: space-between;
+}
+form{
+    width:80%;
+    padding-left:5px;
+}
+.line{
+    padding-top:20px;
+    padding-bottom: 20px;
+    color: rgba(2, 2, 9, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width:90%;
+
+}
+.input-field-login {
+    background-color: rgba(232, 152, 38, 0.62);
+    color: #000000;
+    padding: 10px 150px 10px 10px;
+    border: 2px solid #000000;
+    transition: border-color 0.3s;
+    outline: none;
+    border-radius: 3px;
+    width:90%;
+}
+.input-field-login::placeholder {
+    color: rgba(131, 133, 128, 0.8);
+    font-family: 'Helvetica Neue', sans-serif;
+    opacity: 0.7;
+}
+.input-field-login:focus {
+    border-color: rgba(131, 133, 128, 0.8);
+    box-shadow: 0 0 3px 1px rgba(131, 133, 128, 0.8);
+    border-width: 1px;
+}
+.line-heading{
+    padding-bottom:10px;
+    padding-left:10px;
+    color: rgba(2, 2, 9, 0.8);
+}
+.login-button {
+    background-color: rgb(19, 18, 18);
+    color: #fff8f8;
+    border: 2px solid rgba(40, 39, 39, 0.27);
+    transition: border-color 0.3s;
+    outline: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top:35px;
+    margin-left: 5px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120%;
+    text-decoration: none;
+    font-weight: bolder;
+}
+.sign-up-button{
+    border: none;
+    margin-left: 54%;
+    font-weight: bolder;
+    margin-top: 10px;
+
+}
+
+.login-button:hover {
+    border-color: rgb(0, 0, 0);
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.43);
+}
+
+
+.error-message{
+    font-size: 30px;
+    font-family: "Copperplate Gothic Bold";
+    font-weight: bold;
+    color: #ef0909;
+    margin-top: -5%;
+    width: 120%;
+    margin-left: 10%;
+}

@@ -28,6 +28,20 @@ app.get('/get-customers', (req, res) =>{
         });
 });
 
+app.get('/get-customer-by-email', (req, res) =>{
+    const { email } = req.query;
+    const email_cust = `${email}`;
+    db.any(`SELECT *
+            FROM "Customers"
+            WHERE customer_email = $1;`, [email_cust])
+        .then(result =>{
+            res.json(result);
+        })
+        .catch(error => {
+            res.status(500).json({error:error.message});
+        });
+});
+
 app.get('/get-checks', (req, res) =>{
     const { sortBy, sortOrder } = req.query;
     const orderBy = `${sortBy} ${sortOrder}`;
@@ -87,6 +101,23 @@ app.get('/get-books', (req, res) =>{
             res.status(500).json({error:error.message});
         });
 });
+
+app.post('/registrate', async (req, res) => {
+    try {
+        const { customer_email, password, cust_surname, cust_name, cust_patronymic, birth_date, phone_number, city, street, zip_code, customer_photo_url } = req.body;
+        if (!customer_email || !password || !cust_surname || !cust_name || !phone_number || !city || !street || !zip_code) {
+            throw new Error('Please provide all required fields');
+        }
+        await db.none(`INSERT INTO "Customers" (customer_email, password, cust_surname, cust_name, cust_patronymic, birth_date, phone_number, city, street, zip_code, customer_photo_url) 
+                              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);`,
+            [customer_email, password, cust_surname, cust_name, cust_patronymic, birth_date, phone_number, city, street, zip_code, customer_photo_url]);
+
+        res.json({ message: 'Customer added successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error adding customer: ' + error.message });
+    }
+});
+
 /*
 * *
 * *

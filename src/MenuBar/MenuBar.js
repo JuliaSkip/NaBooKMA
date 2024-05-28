@@ -17,7 +17,7 @@ const MenuBar = () => {
                     </li>
                     <img src={nabookma} alt="Your Alt Text"/>
                     <li className="nav-item">
-                        <NavLink to="/" className="nav-link" activeClassName="active">Customers</NavLink>
+                        <NavLink to="/customers" className="nav-link" activeClassName="active">Customers</NavLink>
                     </li>
                     <li className="nav-item">
                         <NavLink to="/purchases" className="nav-link" activeClassName="active">Purchases</NavLink>
@@ -25,6 +25,10 @@ const MenuBar = () => {
                     <li className="nav-item">
                         <NavLink to="/books" className="nav-link" activeClassName="active">Books</NavLink>
                     </li>
+                    <li className="nav-item">
+                        <NavLink to="/" className="nav-link" activeClassName="active">Log in</NavLink>
+                    </li>
+
                 </ul>
             </nav>
         </header>

@@ -109,21 +109,21 @@ function CustomerPage() {
                 <>
                     <div className="overlay" onClick={handleClosePopup}></div>
                     <div className="popup-container-cust">
-                        <div className="popup">
+                        <div className="popup-cust">
                             <div className="popup-content-cust">
                                 <span className="close" onClick={handleClosePopup}>&times;</span>
                                 {popupCustomer.customer_photo_url && (
                                     <img
                                         src={popupCustomer.customer_photo_url}
                                         alt="Customer"
-                                        className="customer-photo"
+                                        className="customer-photo-popup"
                                     />
                                 )}
                                 <h2>{popupCustomer.cust_name} {popupCustomer.cust_surname} {popupCustomer.patronymic}</h2>
                                 <p>Birth date: {formatDate(popupCustomer.birth_date)}</p>
                                 <p>Email: {popupCustomer.customer_email}</p>
                                 <p>Phone: {popupCustomer.phone_number}</p>
-                                <p>Address: {popupCustomer.city} {popupCustomer.street}, {popupCustomer.zip_code}</p>
+                                <p>Address: {popupCustomer.city} {popupCustomer.street} {popupCustomer.zip_code}</p>
                             </div>
                         </div>
                     </div>
