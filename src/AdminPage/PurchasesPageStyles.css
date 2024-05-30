@@ -86,7 +86,7 @@
     color: rgba(0, 0, 0, 0.75);
     background-color: rgba(62, 147, 29, 0.84);
     border-radius: 5px;
-    z-index: 999;
+    z-index: 99;
 }
 .pending{
     position: relative;
@@ -98,7 +98,7 @@
     text-align: center;
     background-color: rgb(182, 84, 84);
     border-radius: 5px;
-    z-index: 999;
+    z-index: 99;
 }
 .processing{
     position: relative;
@@ -110,7 +110,7 @@
     text-align: center;
     background-color: rgb(222, 206, 115);
     border-radius: 5px;
-    z-index: 999;
+    z-index: 99;
 }
 
 

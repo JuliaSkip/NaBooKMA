@@ -23,6 +23,7 @@ function BooksPage() {
     const [category, setCategory] = useState("all");
     const [showAddForm, setShowAddForm] = useState(false);
     const [photo, setPhoto] = useState(null);
+    const [showBasket, setShowBasket] = useState(false);
 
     const [newBook, setNewBook] = useState({
         id_book: "",
@@ -59,7 +60,9 @@ function BooksPage() {
     useEffect(() => {
         fetchBooks();
     }, [sortBy, sortOrder, language, category]);
-
+    const handleBasketClick = () => {
+        setShowBasket(!showBasket);
+    };
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
     };
@@ -218,7 +221,7 @@ function BooksPage() {
                     <option value="English">English</option>
                 </select>
             </div>
-            <div style={{ marginTop: "20px" }}>
+            <div style={{marginTop: "20px"}}>
                 <button className="add-book-button" onClick={() => setShowAddForm(!showAddForm)}>
                     Add Book
                 </button>
@@ -334,7 +337,7 @@ function BooksPage() {
                         src={allImage}
                         alt="All"
                         onClick={() => handleCategoryChange("all")}
-                        style={{ cursor: 'pointer' }}
+                        style={{cursor: 'pointer'}}
                     />
                 </div>
                 <div>
@@ -343,7 +346,7 @@ function BooksPage() {
                         src={fictionImage}
                         alt="Fiction"
                         onClick={() => handleCategoryChange("Fiction")}
-                        style={{ cursor: 'pointer' }}
+                        style={{cursor: 'pointer'}}
                     />
                 </div>
                 <div>
@@ -352,7 +355,7 @@ function BooksPage() {
                         src={forKidsImage}
                         alt="For Kids"
                         onClick={() => handleCategoryChange("For Children")}
-                        style={{ cursor: 'pointer' }}
+                        style={{cursor: 'pointer'}}
                     />
                 </div>
                 <div>
@@ -361,7 +364,7 @@ function BooksPage() {
                         src={romanceImage}
                         alt="Romance"
                         onClick={() => handleCategoryChange("Romance")}
-                        style={{ cursor: 'pointer' }}
+                        style={{cursor: 'pointer'}}
                     />
                 </div>
                 <div>
@@ -370,7 +373,7 @@ function BooksPage() {
                         src={nonFictionImage}
                         alt="Non-Fiction"
                         onClick={() => handleCategoryChange("Non-Fiction")}
-                        style={{ cursor: 'pointer' }}
+                        style={{cursor: 'pointer'}}
                     />
                 </div>
             </div>

@@ -1,15 +1,31 @@
 import './MenuBarStyles.css';
 import nabookma from './NaBOOKMA__1_-removebg-preview.png'
 import {NavLink} from "react-router-dom";
+import basketIcon from './basket.png';
+import React, {useState} from "react";
 
-/*
-<li className="nav-item">
-    <NavLink to="/" className="nav-link" activeClassName="active">Customers</NavLink>
-</li>
- */
 const MenuBar = () => {
+    const [showPopup, setShowPopup] = useState(false);
+
+
+    const handleBasket = () =>{
+        if(showPopup){
+            setShowPopup(false)
+        }else{
+            setShowPopup(true)
+        }
+    }
     return (
-        <header className="menu-bar">
+        <div>
+            {showPopup && (
+                <div className="overlay-basket show">
+                    <div className="basket-content">
+                        <h2>Your Basket</h2>
+                        {}
+                    </div>
+                </div>
+            )}
+            <header className="menu-bar">
             <nav className="navbar">
                 <ul className="navbar-nav">
                     <li className="nav-item">
@@ -25,13 +41,17 @@ const MenuBar = () => {
                     <li className="nav-item">
                         <NavLink to="/books" className="nav-link" activeClassName="active">Books</NavLink>
                     </li>
-                    <li className="nav-item">
-                        <NavLink to="/" className="nav-link" activeClassName="active">Log in</NavLink>
+                    <li className="nav-item basket-icon">
+                        <img src={basketIcon} alt="Basket" onClick={handleBasket}/>
+                    </li>
+                    <li className="nav-item log-out">
+                        <NavLink to="/" className="nav-link" activeClassName="active">Log out</NavLink>
                     </li>
 
                 </ul>
             </nav>
-        </header>
+            </header>
+        </div>
     );
 };
 
