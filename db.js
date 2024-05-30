@@ -118,6 +118,33 @@ app.post('/registrate', async (req, res) => {
     }
 });
 
+app.post('/add-book', async (req, res) => {
+    try {
+        const { id_book, title, author_name, genre, rating, price, publisher_name, publication_date, summary, book_photo_url, language, category } = req.body;
+        if (!id_book || !title || !author_name || !genre || !rating || !price || !publisher_name || !publication_date || !summary || !language || !category) {
+            throw new Error('Please provide all required fields');
+        }
+        await db.none(`INSERT INTO "Books" (book_id, title, author_name, genre, rating, price, publisher_name, publication_date, summary, book_photo_url, language, category) 
+                              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);`,
+            [id_book, title, author_name, genre, rating, price, publisher_name, publication_date, summary, book_photo_url, language, category]);
+
+        res.json({ message: 'Book added successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error adding book: ' + error.message });
+    }
+});
+// Add this route to db.js
+app.delete('/delete-book/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await db.none(`DELETE FROM "Books" WHERE book_id = $1`, [id]);
+        res.json({ message: 'Book deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error deleting book: ' + error.message });
+    }
+});
+
+
 /*
 * *
 * *

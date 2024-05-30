@@ -6,23 +6,43 @@ import forKidsImage from "../BooksPage/for-kids.png";
 import romanceImage from "../BooksPage/romance.png";
 import nonFictionImage from "../BooksPage/non-fiction.png";
 import allImage from "../BooksPage/all.png";
+import { createClient } from "@supabase/supabase-js";
 
+const supabase = createClient('https://upkigeauanwefsngyhqb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwa2lnZWF1YW53bmd5aHFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYyMjQxOTQsImV4cCI6MjAzMTgwMDE5NH0.s60GCwAeFC5zdmGKiJ0oxm7WXf2gcsCUWkUhEguUlvM');
 
 function BooksPage() {
     const [fetchError, setFetchError] = useState(null);
     const [books, setBooks] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
+    const [formError, setFormError] = useState('');
     const [popupBook, setPopupBook] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState("title");
     const [sortOrder, setSortOrder] = useState("ASC");
     const [language, setLanguage] = useState("all");
-    const [category, setCategory] = useState("all"); // Add category state
+    const [category, setCategory] = useState("all");
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [photo, setPhoto] = useState(null);
+
+    const [newBook, setNewBook] = useState({
+        id_book: "",
+        title: "",
+        author_name: "",
+        genre: "",
+        rating: "",
+        price: "",
+        publisher_name: "",
+        publication_date: "",
+        summary: "",
+        book_photo_url: null,
+        language: "",
+        category: ""
+    });
 
     const fetchBooks = async () => {
         try {
             const response = await fetch(
-                `http://localhost:8081/get-books?sortBy=${sortBy}&sortOrder=${sortOrder}`
+                `http://localhost:8081/get-books?sortBy=${sortBy}&sortOrder=${sortOrder}&language=${language}&category=${category}`
             );
             if (!response.ok) {
                 throw new Error("Could not fetch books");
@@ -38,7 +58,7 @@ function BooksPage() {
 
     useEffect(() => {
         fetchBooks();
-    }, [sortBy, sortOrder]);
+    }, [sortBy, sortOrder, language, category]);
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
@@ -50,6 +70,82 @@ function BooksPage() {
 
     const handleCategoryChange = (selectedCategory) => {
         setCategory(selectedCategory);
+    };
+
+    const handleAddBookChange = (e) => {
+        const { name, value } = e.target;
+        setNewBook((prevBook) => ({ ...prevBook, [name]: value }));
+    };
+
+    const handleAddBookSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            let photoUrl = null;
+            if (photo) {
+                const { data, error } = await supabase.storage
+                    .from('photos')
+                    .upload(`${photo.name}`, photo, {
+                        cacheControl: '3600',
+                        upsert: false,
+                    });
+
+                if (error) {
+                    console.error('Error uploading photo:', error.message);
+                    setFormError('Error uploading photo. Please try again.');
+                    return;
+                }
+
+                photoUrl = `https://upkigeauanwefsngyhqb.supabase.co/storage/v1/object/public/photos/${photo.name}`;
+            }
+
+            const bookToSubmit = { ...newBook, book_photo_url: photoUrl };
+            const response = await fetch("http://localhost:8081/add-book", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(bookToSubmit)
+            });
+            if (!response.ok) {
+                throw new Error("Could not add book");
+            }
+            const result = await response.json();
+
+            setNewBook({
+                id_book: "",
+                title: "",
+                author_name: "",
+                genre: "",
+                rating: "",
+                price: "",
+                publisher_name: "",
+                publication_date: "",
+                summary: "",
+                book_photo_url: null,
+                language: "",
+                category: ""
+            });
+            setPhoto(null);
+            setShowAddForm(false);
+            fetchBooks();
+        } catch (error) {
+            console.error("Error adding book:", error.message);
+        }
+    };
+
+    const handleDeleteBook = async (bookId) => {
+        try {
+            const response = await fetch(`http://localhost:8081/delete-book/${bookId}`, {
+                method: "DELETE"
+            });
+            if (!response.ok) {
+                throw new Error("Could not delete book");
+            }
+            fetchBooks();
+            setShowPopup(false);
+        } catch (error) {
+            console.error("Error deleting book:", error.message);
+        }
     };
 
     const filteredBooks = books.filter(book => {
@@ -122,6 +218,115 @@ function BooksPage() {
                     <option value="English">English</option>
                 </select>
             </div>
+            <div style={{ marginTop: "20px" }}>
+                <button className="add-book-button" onClick={() => setShowAddForm(!showAddForm)}>
+                    Add Book
+                </button>
+            </div>
+            {showAddForm && (
+                <form className="add-book-form" onSubmit={handleAddBookSubmit}>
+                    <input
+                        type="text"
+                        name="id_book"
+                        placeholder="Book ID"
+                        value={newBook.id_book}
+                        onChange={handleAddBookChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="title"
+                        placeholder="Title"
+                        value={newBook.title}
+                        onChange={handleAddBookChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="author_name"
+                        placeholder="Author Name"
+                        value={newBook.author_name}
+                        onChange={handleAddBookChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="genre"
+                        placeholder="Genre"
+                        value={newBook.genre}
+                        onChange={handleAddBookChange}
+                        required
+                    />
+                    <input
+                        type="number"
+                        name="rating"
+                        placeholder="Rating"
+                        value={newBook.rating}
+                        onChange={handleAddBookChange}
+                        required
+                    />
+                    <input
+                        type="number"
+                        name="price"
+                        placeholder="Price"
+                        value={newBook.price}
+                        onChange={handleAddBookChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="publisher_name"
+                        placeholder="Publisher Name"
+                        value={newBook.publisher_name}
+                        onChange={handleAddBookChange}
+                        required
+                    />
+                    <input
+                        type="date"
+                        name="publication_date"
+                        value={newBook.publication_date}
+                        onChange={handleAddBookChange}
+                        required
+                    />
+                    <textarea
+                        name="summary"
+                        placeholder="Summary"
+                        value={newBook.summary}
+                        onChange={handleAddBookChange}
+                        required
+                    />
+                    <label htmlFor="photo">Profile image:</label>
+                    <input
+                        type="file" // Change input type to file
+                        id="photo"
+                        onChange={(e) => setPhoto(e.target.files[0])} // Store selected photo in state
+                    />
+                    <select
+                        name="language"
+                        value={newBook.language}
+                        onChange={handleAddBookChange}
+                        required
+                    >
+                        <option value="">Select Language</option>
+                        <option value="Українська">Українська</option>
+                        <option value="English">English</option>
+                    </select>
+                    <select
+                        name="category"
+                        value={newBook.category}
+                        onChange={handleAddBookChange}
+                        required
+                    >
+                        <option value="">Select Category</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="For Children">For Children</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                    </select>
+                    <button type="submit">Submit</button>
+                    <button type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
+                </form>
+            )}
             <div className="category-buttons">
                 <div>
                     <img
@@ -129,7 +334,7 @@ function BooksPage() {
                         src={allImage}
                         alt="All"
                         onClick={() => handleCategoryChange("all")}
-                        style={{cursor: 'pointer'}} // Optional: makes it clear that the image is clickable
+                        style={{ cursor: 'pointer' }}
                     />
                 </div>
                 <div>
@@ -138,7 +343,7 @@ function BooksPage() {
                         src={fictionImage}
                         alt="Fiction"
                         onClick={() => handleCategoryChange("Fiction")}
-                        style={{cursor: 'pointer'}} // Optional: makes it clear that the image is clickable
+                        style={{ cursor: 'pointer' }}
                     />
                 </div>
                 <div>
@@ -147,7 +352,7 @@ function BooksPage() {
                         src={forKidsImage}
                         alt="For Kids"
                         onClick={() => handleCategoryChange("For Children")}
-                        style={{cursor: 'pointer'}} // Optional: makes it clear that the image is clickable
+                        style={{ cursor: 'pointer' }}
                     />
                 </div>
                 <div>
@@ -156,7 +361,7 @@ function BooksPage() {
                         src={romanceImage}
                         alt="Romance"
                         onClick={() => handleCategoryChange("Romance")}
-                        style={{cursor: 'pointer'}} // Optional: makes it clear that the image is clickable
+                        style={{ cursor: 'pointer' }}
                     />
                 </div>
                 <div>
@@ -165,10 +370,9 @@ function BooksPage() {
                         src={nonFictionImage}
                         alt="Non-Fiction"
                         onClick={() => handleCategoryChange("Non-Fiction")}
-                        style={{cursor: 'pointer'}} // Optional: makes it clear that the image is clickable
+                        style={{ cursor: 'pointer' }}
                     />
                 </div>
-
             </div>
             <div className="book-cards">
                 {filteredBooks.map((book) => (
@@ -214,6 +418,9 @@ function BooksPage() {
                                 <p><b>Publisher:</b> {popupBook.publisher_name}</p>
                                 <p><b>Published Date:</b> {formatDate(popupBook.publication_date)}</p>
                                 <p><b>Description:</b> {popupBook.summary}</p>
+                                <button className="delete-button" onClick={() => handleDeleteBook(popupBook.book_id)}>
+                                    Delete Book
+                                </button>
                             </div>
                         </div>
                     </div>

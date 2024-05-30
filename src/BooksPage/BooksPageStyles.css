@@ -175,8 +175,7 @@ body{
     background-color: rgba(232, 152, 38, 0.62);
     border-radius: 8px;
     color: rgba(0, 0, 0, 0.75);
-    padding: 20px;
-    padding-right:40px;
+    padding: 20px 40px 20px 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
@@ -223,4 +222,90 @@ body{
 .price{
     font-size:25px;
     font-weight:bold;
+}
+.add-popup{
+    z-index: 435326789;
+}
+.add-book-button {
+    background-color: rgba(232, 152, 38, 0.62);
+    width: 10%;
+    border: 1px solid rgba(239, 182, 99, 0.62);
+    padding: 8px;
+    border-radius: 10px;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.75);
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    left: 10%;
+    top: 100px;
+    margin: -105px 0 20px;
+}
+
+.add-book-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 100px 10.25% 20px;
+    padding: 20px;
+    border: 1px solid rgba(239, 182, 99, 0.62);
+    border-radius: 10px;
+    background-color: rgba(232, 152, 38, 0.62);
+}
+
+.add-book-form input,
+.add-book-form select,
+.add-book-form textarea {
+    padding: 10px;
+    border: 1px solid rgba(239, 182, 99, 0.62);
+    border-radius: 10px;
+    background-color: #f1daae;
+    font-size: 16px;
+}
+
+.add-book-form button {
+    background-color: rgba(220, 130, 12, 0.7);
+    border: 1px solid rgba(239, 182, 99, 0.62);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.75);
+    cursor: pointer;
+    width: 30%;
+    align-self: center;
+}
+.button-row {
+    display: flex;
+}
+
+.button-row button {
+    margin-right: 2%;
+}
+
+.button-row button:last-child {
+    margin-right: 0;
+}
+.button-row button:first-child {
+    margin-left: 20%;
+}
+.add-book-buttons{
+    margin-left:10%;
+    padding-top:1%;
+}
+.delete-button {
+    background-color: rgba(220, 130, 12, 0.7);
+    border: 1px solid rgba(239, 182, 99, 0.62);
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.75);
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: rgba(232, 152, 38, 0.62);
 }
