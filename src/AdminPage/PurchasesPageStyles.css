@@ -73,7 +73,15 @@
     border-radius: 10px;
     font-size: 13px;
     margin-top: -15%;
-    margin-left: 5%;
+    margin-right: 5%;
+}
+.delete-check{
+    background-color: rgba(147, 29, 29, 0.84);
+    border: 1px solid black;
+    padding: 8px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-top: -15%;
 }
 
 .completed{

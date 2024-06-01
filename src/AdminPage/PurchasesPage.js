@@ -123,6 +123,18 @@ function PurchasesPage() {
         return info;
     };
 
+    const handleDelete = async (checkNumber) =>{
+        try {
+            const response = await fetch(`http://localhost:8081/delete-check/${checkNumber}`, { method: 'DELETE' });
+            if (!response.ok) {
+                throw new Error('Could not delete check');
+            }
+            fetchChecks();
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+
     return (
         <div>
             <MenuBar />
@@ -163,9 +175,8 @@ function PurchasesPage() {
                                 <h3>Check № {check.check_number}</h3>
                                 <p className="print-date">{formatDate(check.print_date)}</p>
                                 <p className="total-price">{check.total_price} грн</p>
-                                <button className="open-check" onClick={() => handleOpenPopup(check)}>
-                                ⇲
-                            </button>
+                                <button className="open-check" onClick={() => handleOpenPopup(check)}>⇲</button>
+                                <button className="delete-check" onClick={() => handleDelete(check.check_number)}>⛌</button>
                         </div>
                         </div>
                     ))}

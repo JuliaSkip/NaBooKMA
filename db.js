@@ -62,7 +62,6 @@ app.get('/get-checks-by-customer', async (req, res) => {
         const orderBy = `${sortBy} ${sortOrder}`;
         const email = customer_email;
 
-        // Using parameterized query to prevent SQL injection
         const checks = await db.any(
             `SELECT * 
                     FROM "Check"
@@ -213,6 +212,47 @@ app.get('/get-profile', (req, res) => {
         });
 });
 
+app.delete('/delete-check/:id', (req, res) => {
+    const idCheck = req.params.id;
+    db.any(`DELETE 
+                  FROM "Check" 
+                  WHERE check_number = $1;`, [idCheck])
+        .then(result => {
+            res.json(result);
+        })
+        .catch(error => {
+            res.status(500).json({ error: error.message });
+        });
+});
+
+app.put('/change-password', (req, res) => {
+    const { customer_email, password  } = req.query;
+    db.none(`UPDATE "Customers"
+                    SET password = $1
+                    WHERE customer_email = $2;`, [password, customer_email])
+        .then(() => {
+            res.json({ message: 'Password updated successfully' });
+        })
+        .catch(error => {
+            res.status(500).json({ error: error.message });
+        });
+});
+
+app.put('/update-profile', async (req, res) => {
+    const { cust_name, cust_patronymic, cust_surname, phone_number, city, street, zip_code, customer_email} = req.body;
+    db.none(`UPDATE "Customers" 
+             SET cust_name = $1, cust_patronymic = $2, 
+                 cust_surname = $3, phone_number = $4, 
+                 city = $5, street = $6, zip_code = $7 
+             WHERE customer_email = $8`,
+            [cust_name, cust_patronymic, cust_surname, phone_number, city, street, zip_code, customer_email])
+        .then(() => {
+            res.json({ message: 'Profile updated successfully' });
+        })
+        .catch(error => {
+            res.status(500).json({ error: error.message });
+        });
+});
 
 
 /*
