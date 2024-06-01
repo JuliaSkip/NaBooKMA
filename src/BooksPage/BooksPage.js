@@ -60,9 +60,11 @@ function BooksPage() {
     useEffect(() => {
         fetchBooks();
     }, [sortBy, sortOrder, language, category]);
+
     const handleBasketClick = () => {
         setShowBasket(!showBasket);
     };
+
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
     };
@@ -149,6 +151,12 @@ function BooksPage() {
         } catch (error) {
             console.error("Error deleting book:", error.message);
         }
+    };
+
+    const handleAddToBasket = (e, book) => {
+        e.stopPropagation();
+        // Functionality to add the book to the basket
+        console.log("Book added to basket:", book);
     };
 
     const filteredBooks = books.filter(book => {
@@ -395,6 +403,10 @@ function BooksPage() {
                             <h2>{book.title}</h2>
                             <p className="author-name">Author: {book.author_name}</p>
                             <div className="rating">{renderStars(book.rating)}</div>
+                            <p className="price">${book.price}</p>
+                            <button className="basket-button" onClick={(e) => handleAddToBasket(e, book)}>
+                                Add to Basket
+                            </button>
                         </div>
                     </div>
                 ))}

@@ -54,7 +54,6 @@ img{
     margin-left: 4%;
 }
 
-/* Apply blur effect to elements outside the basket */
 body.basket-open > *:not(.basket-overlay) {
     filter: blur(3px);
 }
