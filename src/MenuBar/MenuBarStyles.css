@@ -44,6 +44,7 @@ img{
     height: 35px;
     margin-left: -30px;
 }
+
 .basket-icon{
     position: fixed;
     top:2%;
@@ -54,6 +55,7 @@ img{
     margin-left: 4%;
 }
 
+/* Apply blur effect to elements outside the basket */
 body.basket-open > *:not(.basket-overlay) {
     filter: blur(3px);
 }
@@ -88,5 +90,3 @@ body.basket-open > *:not(.basket-overlay) {
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
 }
-
-

@@ -108,6 +108,9 @@
     margin-bottom: 10px;
     border: 1px solid black;
 }
+.book-title{
+    height: 50px;
+}
 
 
 .overlay {
@@ -223,6 +226,7 @@ body{
     font-size:25px;
     font-weight:bold;
 }
+
 .add-popup{
     z-index: 435326789;
 }
@@ -293,16 +297,14 @@ body{
     padding-top:1%;
 }
 .delete-button {
-    background-color: rgba(220, 130, 12, 0.7);
+    background-color: rgba(0, 0, 0, 0.7);
     border: 1px solid rgba(239, 182, 99, 0.62);
     padding: 8px 12px;
     border-radius: 10px;
     font-size: 16px;
-    color: rgba(0, 0, 0, 0.75);
+    color: rgba(255, 255, 255, 0.75);
     cursor: pointer;
-    position: absolute;
-    top: 10px;
-    right: 10px;
+
     transition: background-color 0.3s ease;
 }
 
@@ -328,4 +330,3 @@ body{
 .basket-button:hover {
     background-color: rgba(232, 152, 38, 0.62);
 }
-

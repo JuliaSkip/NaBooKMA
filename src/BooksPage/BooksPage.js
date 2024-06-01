@@ -8,7 +8,6 @@ import nonFictionImage from "../BooksPage/non-fiction.png";
 import allImage from "../BooksPage/all.png";
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient('https://upkigeauanwefsngyhqb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwa2lnZWF1YW53bmd5aHFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYyMjQxOTQsImV4cCI6MjAzMTgwMDE5NH0.s60GCwAeFC5zdmGKiJ0oxm7WXf2gcsCUWkUhEguUlvM');
 
 function BooksPage() {
     const [fetchError, setFetchError] = useState(null);
@@ -22,6 +21,7 @@ function BooksPage() {
     const [language, setLanguage] = useState("all");
     const [category, setCategory] = useState("all");
     const [showAddForm, setShowAddForm] = useState(false);
+    const [showEditForm, setShowEditForm] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [showBasket, setShowBasket] = useState(false);
 
@@ -39,6 +39,8 @@ function BooksPage() {
         language: "",
         category: ""
     });
+
+    const supabase = createClient('https://upkigeauanwefsngyhqb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwa2lnZWF1YW53bmd5aHFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYyMjQxOTQsImV4cCI6MjAzMTgwMDE5NH0.s60GCwAeFC5zdmGKiJ0oxm7WXf2gcsCUWkUhEguUlvM');
 
     const fetchBooks = async () => {
         try {
@@ -60,10 +62,6 @@ function BooksPage() {
     useEffect(() => {
         fetchBooks();
     }, [sortBy, sortOrder, language, category]);
-
-    const handleBasketClick = () => {
-        setShowBasket(!showBasket);
-    };
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
@@ -122,6 +120,8 @@ function BooksPage() {
                 author_name: "",
                 genre: "",
                 rating: "",
+                isbn: "",
+                pages: "",
                 price: "",
                 publisher_name: "",
                 publication_date: "",
@@ -153,14 +153,8 @@ function BooksPage() {
         }
     };
 
-    const handleAddToBasket = (e, book) => {
-        e.stopPropagation();
-        // Functionality to add the book to the basket
-        console.log("Book added to basket:", book);
-    };
-
     const filteredBooks = books.filter(book => {
-        const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch = book.title.toLowerCase().startsWith(searchQuery.toLowerCase());
         const matchesLanguage = language === "all" || book.language === language;
         const matchesCategory = category === "all" || book.category === category;
         return matchesSearch && matchesLanguage && matchesCategory;
@@ -202,6 +196,11 @@ function BooksPage() {
         return stars;
     };
 
+    const handleAddToBasket = (e, book) => {
+        e.stopPropagation();
+        console.log("Book added to basket:", book);
+    };
+
     return (
         <div>
             <MenuBar/>
@@ -229,21 +228,15 @@ function BooksPage() {
                     <option value="English">English</option>
                 </select>
             </div>
-            <div style={{marginTop: "20px"}}>
+            <div style={{ marginTop: "20px" }}>
                 <button className="add-book-button" onClick={() => setShowAddForm(!showAddForm)}>
                     Add Book
                 </button>
             </div>
-            {showAddForm && (
+
+
+            {showAddForm || showEditForm && (
                 <form className="add-book-form" onSubmit={handleAddBookSubmit}>
-                    <input
-                        type="text"
-                        name="id_book"
-                        placeholder="Book ID"
-                        value={newBook.id_book}
-                        onChange={handleAddBookChange}
-                        required
-                    />
                     <input
                         type="text"
                         name="title"
@@ -273,6 +266,22 @@ function BooksPage() {
                         name="rating"
                         placeholder="Rating"
                         value={newBook.rating}
+                        onChange={handleAddBookChange}
+                        required
+                    />
+                    <input
+                        type="number"
+                        name="isbn"
+                        placeholder="ISBN"
+                        value={newBook.isbn}
+                        onChange={handleAddBookChange}
+                        required
+                    />
+                    <input
+                        type="number"
+                        name="pages"
+                        placeholder="Pages number"
+                        value={newBook.pages}
                         onChange={handleAddBookChange}
                         required
                     />
@@ -338,6 +347,9 @@ function BooksPage() {
                     <button type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
                 </form>
             )}
+
+
+
             <div className="category-buttons">
                 <div>
                     <img
@@ -400,7 +412,7 @@ function BooksPage() {
                             />
                         )}
                         <div className="book-info">
-                            <h2>{book.title}</h2>
+                            <h2 className="book-title">{book.title}</h2>
                             <p className="author-name">Author: {book.author_name}</p>
                             <div className="rating">{renderStars(book.rating)}</div>
                             <p className="price">${book.price}</p>
@@ -408,9 +420,12 @@ function BooksPage() {
                                 Add to Basket
                             </button>
                         </div>
+
                     </div>
                 ))}
             </div>
+
+
             {popupBook && showPopup && (
                 <>
                     <div className="overlay" onClick={handleClosePopup}></div>
@@ -428,6 +443,7 @@ function BooksPage() {
                                 <h2>{popupBook.title}</h2>
                                 <p><b>Author:</b> {popupBook.author_name}</p>
                                 <p><b>Genre:</b> {popupBook.genre}</p>
+                                <p><b>Pages: </b>{popupBook.pages}</p>
                                 <div className="rating">{renderStars(popupBook.rating)}</div>
                                 <p className="price">${popupBook.price}</p>
                                 <p><b>Publisher:</b> {popupBook.publisher_name}</p>
@@ -441,6 +457,8 @@ function BooksPage() {
                     </div>
                 </>
             )}
+
+
             {fetchError && <div>Error: {fetchError}</div>}
             {filteredBooks.length === 0 && <div className="error-message"><h2>No books found.</h2></div>}
             {filteredBooks.length !== 0 &&

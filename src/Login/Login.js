@@ -48,7 +48,7 @@ function Login() {
                 throw new Error('Incorrect password or email!');
             }
 
-            navigate('/customers');
+            navigate('/nabookma');
         } catch (error) {
             setError(error.message);
         }
@@ -63,11 +63,11 @@ function Login() {
                     </div>
                     <div className="line">
                         <label htmlFor="email" className="line-heading">
-                            <strong>ID</strong>
+                            <strong>Email</strong>
                         </label>
                         <input
                             type="text"
-                            placeholder="Enter your ID"
+                            placeholder="Enter your email"
                             name="id"
                             className="input-field-login"
                             value={email}

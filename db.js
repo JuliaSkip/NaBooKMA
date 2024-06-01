@@ -55,6 +55,28 @@ app.get('/get-checks', (req, res) =>{
             res.status(500).json({error:error.message});
         });
 });
+
+app.get('/get-checks-by-customer', async (req, res) => {
+    try {
+        const { sortBy, sortOrder, customer_email } = req.query;
+        const orderBy = `${sortBy} ${sortOrder}`;
+        const email = customer_email;
+
+        // Using parameterized query to prevent SQL injection
+        const checks = await db.any(
+            `SELECT * 
+                    FROM "Check"
+                    INNER JOIN "Customers" ON "Check".customer_id = "Customers".customer_id
+                    WHERE "Customers".customer_email = $1
+                    ORDER BY ${orderBy};`,
+            [email]
+        );
+
+        res.json(checks);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 app.get('/get-purchases', (req, res) =>{
     const { check_number } = req.query;
     const number = `${check_number}`;
@@ -102,7 +124,7 @@ app.get('/get-books', (req, res) =>{
         });
 });
 
-app.post('/registrate', async (req, res) => {
+app.post('/registration', async (req, res) => {
     try {
         const { customer_email, password, cust_surname, cust_name, cust_patronymic, birth_date, phone_number, city, street, zip_code, customer_photo_url } = req.body;
         if (!customer_email || !password || !cust_surname || !cust_name || !phone_number || !city || !street || !zip_code) {
@@ -120,20 +142,41 @@ app.post('/registrate', async (req, res) => {
 
 app.post('/add-book', async (req, res) => {
     try {
-        const { id_book, title, author_name, genre, rating, price, publisher_name, publication_date, summary, book_photo_url, language, category } = req.body;
-        if (!id_book || !title || !author_name || !genre || !rating || !price || !publisher_name || !publication_date || !summary || !language || !category) {
-            throw new Error('Please provide all required fields');
+        const {
+            title, author_name, genre, rating, price, publisher_name,
+            publication_date, summary, book_photo_url, language,
+            category, isbn, pages
+        } = req.body;
+
+        if (
+            !title || !author_name || !genre || !rating || !price ||
+            !publisher_name || !publication_date || !summary ||
+            !language || !category || !isbn || !pages
+        ) {
+            return res.status(400).json({ error: 'Please provide all required fields' });
         }
-        await db.none(`INSERT INTO "Books" (book_id, title, author_name, genre, rating, price, publisher_name, publication_date, summary, book_photo_url, language, category) 
-                              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);`,
-            [id_book, title, author_name, genre, rating, price, publisher_name, publication_date, summary, book_photo_url, language, category]);
+
+        await db.none(`
+            INSERT INTO "Books" (
+                title, author_name, genre, rating, price,
+                publisher_name, publication_date, summary,
+                book_photo_url, language, category, isbn, pages
+            ) VALUES (
+                $1, $2, $3, $4, $5,
+                $6, $7, $8, $9, $10, $11, $12, $13
+            );
+        `, [
+            title, author_name, genre, rating, price,
+            publisher_name, publication_date, summary,
+            book_photo_url, language, category, isbn, pages
+        ]);
 
         res.json({ message: 'Book added successfully' });
     } catch (error) {
         res.status(500).json({ error: 'Error adding book: ' + error.message });
     }
 });
-// Add this route to db.js
+
 app.delete('/delete-book/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -143,6 +186,33 @@ app.delete('/delete-book/:id', async (req, res) => {
         res.status(500).json({ error: 'Error deleting book: ' + error.message });
     }
 });
+
+app.get('/get-book-by-id', (req, res) =>{
+    const {id} = req.query;
+    db.any(`SELECT *
+                  FROM "Books"
+                  WHERE book_id = $1`,[id])
+        .then(result =>{
+            res.json(result);
+        })
+        .catch(error => {
+            res.status(500).json({error:error.message});
+        });
+});
+
+app.get('/get-profile', (req, res) => {
+    const { customer_email } = req.query;
+
+    db.any(`SELECT * FROM "Customers" WHERE LOWER(customer_email) = LOWER($1)`, [customer_email])
+        .then(result => {
+            res.json(result);
+        })
+        .catch(error => {
+            console.error('Database query error:', error);
+            res.status(500).json({ error: error.message });
+        });
+});
+
 
 
 /*

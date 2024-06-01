@@ -31,24 +31,26 @@
 
 .registration-form input {
     width: 100%;
-    padding: 8px;
-    background-color: rgb(255, 255, 255);
     margin-bottom: 10px;
     margin-left: 10%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
     font-family: 'Helvetica Neue', sans-serif;
+    padding: 10px;
+    border: 1px solid rgba(239, 182, 99, 0.62);
+    border-radius: 10px;
+    background-color: #f1daae;
+    font-size: 16px;
 }
 
 .registration-form select {
-    width: 103%;
-    padding: 8px;
-    background-color: rgba(255, 255, 255, 0.62);
+    width: 100%;
     margin-bottom: 10px;
     margin-left: 10%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
     font-family: 'Helvetica Neue', sans-serif;
+    padding: 10px;
+    border: 1px solid rgba(239, 182, 99, 0.62);
+    border-radius: 10px;
+    background-color: #f1daae;
+    font-size: 16px;
 }
 
 .registration-form button {
