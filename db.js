@@ -81,7 +81,7 @@ app.get('/get-purchases', (req, res) =>{
     const number = `${check_number}`;
     db.any(`SELECT "Check".check_number, total_price, print_date, status,
                           "Purchases".book_id, quantity, selling_price,
-                          "Customers".customer_email, cust_surname, cust_name, cust_patronymic,
+                          "Customers".customer_id, customer_email, password, cust_surname, cust_name, cust_patronymic, birth_date, phone_number, city, street, zip_code, customer_photo_url,
                           "Books".isbn, title, author_name, publisher_name, genre, category, publication_date, price, pages, language, summary, rating, book_photo_url
                   FROM (("Check" INNER JOIN "Purchases" ON "Check".check_number = "Purchases".check_number)
                   INNER JOIN "Books" ON "Books".book_id = "Purchases".book_id)

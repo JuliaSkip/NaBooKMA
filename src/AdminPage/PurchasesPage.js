@@ -13,6 +13,7 @@ function PurchasesPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [filter, setFilter] = useState("all");
 
+
     const fetchChecks = async () => {
         try {
             const response = await fetch(

@@ -42,7 +42,7 @@ function BooksPage() {
         category: ""
     });
 
-    const supabase = createClient('https://upkigeauanwefsngyhqb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwa2lnZWF1YW53bmd5aHFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYyMjQxOTQsImV4cCI6MjAzMTgwMDE5NH0.s60GCwAeFC5zdmGKiJ0oxm7WXf2gcsCUWkUhEguUlvM');
+    const supabase = createClient('https://upkigeauanwefsngyhqb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwa2lnZWF1YW53ZWZzbmd5aHFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYyMjQxOTQsImV4cCI6MjAzMTgwMDE5NH0.s60GCwAeFC5zdmGKiJ0oxm7WXf2gcsCUWkUhEguUlvM');
 
     const fetchBooks = async () => {
         try {
@@ -65,19 +65,45 @@ function BooksPage() {
         const { name, value } = e.target;
         setPopupBook((prevBook) => ({ ...prevBook, [name]: value }));
     };
+
+
     const handleEditBookSubmit = async (e) => {
-        e.preventDefault();try {
+        e.preventDefault();
+        let photoUrl = "https://upkigeauanwefsngyhqb.supabase.co/storage/v1/object/public/photos/default-book-icon.png"
+        if (photo) {
+            const { data, error } = await supabase.storage
+                .from('photos')
+                .upload(`${photo.name}`, photo, {
+                    cacheControl: '3600',
+                    upsert: false,
+                });
+
+            if (error) {
+                console.error('Error uploading photo:', error.message);
+                setFormError('Error uploading photo. Please try again.');
+                return;
+            }
+
+            photoUrl = 'https://upkigeauanwefsngyhqb.supabase.co/storage/v1/object/public/photos/'+`${photo.name}`;
+        }
+
+        const bookToSubmit = { ...popupBook, book_photo_url: photoUrl };
+        console.log('Submitting book update:', bookToSubmit);
+        try {
             const response = await fetch(`http://localhost:8081/update-book/${popupBook.book_id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(popupBook)
+                body: JSON.stringify(bookToSubmit)
             });
+
             if (!response.ok) {
                 throw new Error("Could not update book");
             }
+
             const result = await response.json();
+            console.log('Book updated successfully:', result);
 
             setShowEditPopup(false);
             fetchBooks();
@@ -85,6 +111,7 @@ function BooksPage() {
             console.error("Error editing book:", error.message);
         }
     };
+
 
     useEffect(() => {
         fetchBooks();
@@ -110,7 +137,7 @@ function BooksPage() {
     const handleAddBookSubmit = async (e) => {
         e.preventDefault();
         try {
-            let photoUrl = null;
+            let photoUrl = "https://upkigeauanwefsngyhqb.supabase.co/storage/v1/object/public/photos/default-book-icon.png"
             if (photo) {
                 const { data, error } = await supabase.storage
                     .from('photos')
@@ -125,7 +152,7 @@ function BooksPage() {
                     return;
                 }
 
-                photoUrl = `https://upkigeauanwefsngyhqb.supabase.co/storage/v1/object/public/photos/${photo.name}`;
+                photoUrl = 'https://upkigeauanwefsngyhqb.supabase.co/storage/v1/object/public/photos/'+`${photo.name}`;
             }
 
             const bookToSubmit = { ...newBook, book_photo_url: photoUrl };
@@ -539,7 +566,7 @@ function BooksPage() {
                                     />
                                 )}
                                 <h2>Edit Book</h2>
-                                <form onSubmit={handleEditBookSubmit} className="edit-form" >
+                                <form onSubmit={handleEditBookSubmit} className="edit-form">
                                     <input
                                         type="text"
                                         name="title"

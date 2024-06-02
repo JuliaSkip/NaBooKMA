@@ -217,9 +217,10 @@ const MenuBar = () => {
                         <li className="nav-item basket-icon">
                             <img src={basketIcon} alt="Basket" onClick={handleBasket}/>
                         </li>
-                        <li className="nav-item log-out">
+                        <li className="nav-item log-out"></li>
+                        {!showPopup && ( <li className="nav-item log-out">
                             <NavLink to="/" className="nav-link" activeClassName="active">Log out</NavLink>
-                        </li>
+                        </li>)}
 
                     </ul>
                 </nav>

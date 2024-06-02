@@ -397,6 +397,11 @@ body{
 .popup-content-book button:last-child {
     margin-top: 10px;
 }
+.popup-content-book {
+    text-align: center;
+    margin-left: 10%;
+}
+
 .edit-form{
     margin-left: 6%;
 }
