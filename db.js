@@ -325,6 +325,63 @@ app.delete('/delete-book-from-basket/:bookId', async (req, res) => {
     }
 });
 
+app.post('/create-check', async (req, res) => {
+    try {
+        const { total_price, customer_id, print_date, status } = req.body;
+        const result = await db.one(`INSERT INTO "Check" (total_price, print_date, customer_id, status)
+                                     VALUES ($1, $2, $3, $4) 
+                                     RETURNING check_number`,
+            [total_price, print_date, customer_id, status]);
+        res.json({ check_number: result.check_number, message: 'Check added successfully' });
+    } catch (err) {
+        console.error('Error creating check:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post('/add-purchase', async (req, res) => {
+    try {
+        const { book_id, check_number, quantity, selling_price } = req.body;
+        await db.none(`INSERT INTO "Purchases" (book_id, check_number, quantity, selling_price)
+                       VALUES ($1, $2, $3, $4)`,
+            [book_id, check_number, quantity, selling_price]
+        );
+        res.status(201).json({ message: 'Purchase added successfully' });
+    } catch (err) {
+        console.error('Error adding purchase:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+app.put('/update-book/:id', async (req, res) => {
+    const { id } = req.params;
+    const {
+        title, author_name, genre, rating, price,
+        publisher_name, publication_date, summary,
+        book_photo_url, language, category, isbn, pages
+    } = req.body;
+
+    try {
+        console.log(publication_date)
+        await db.none(`
+            UPDATE "Books"
+            SET title = $1, author_name = $2, genre = $3, rating = $4, price = $5,
+                publisher_name = $6, publication_date = $7, summary = $8,
+                book_photo_url = $9, language = $10, category = $11, isbn = $12, pages = $13
+            WHERE book_id = $14
+        `, [
+            title, author_name, genre, rating, price,
+            publisher_name, publication_date, summary,
+            book_photo_url, language, category, isbn, pages,
+            id
+        ]);
+        console.log(publication_date)
+
+        res.json({ message: 'Book updated successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error updating book: ' + error.message });
+    }
+});
+
 /*
 * *
 * *

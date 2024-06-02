@@ -65,7 +65,7 @@ body.basket-open > *:not(.basket-overlay) {
     top: 0;
     right: 0;
     width: 300px;
-    height: 100%;
+    height: 80%;
     background: white;
     box-shadow: -2px 0 999999px rgba(0,0,0,0.5);
     z-index: 1000;
@@ -73,9 +73,8 @@ body.basket-open > *:not(.basket-overlay) {
     overflow-y: auto;
 }
 .basket-content h2{
-    position: fixed;
-    top:5px;
-    z-index: 9999;
+    position: relative;
+    margin-top: 2%;
 }
 
 .close-basket {
@@ -96,6 +95,34 @@ body.basket-open > *:not(.basket-overlay) {
     z-index: 999;
 }
 
+.buy-button{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 340px;
+    height: 40px;
+    z-index: 1000;
+}
+.total-sum{
+    position: fixed;
+    bottom: 20px;
+    right: -10px;
+    width: 340px;
+    height: 40px;
+    z-index: 1000;
+}
+
+.buy-section{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    height: 9%;
+    background: rgba(255, 255, 255, 0.93);
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+}
 
 
 

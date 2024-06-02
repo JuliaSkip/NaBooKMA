@@ -66,8 +66,7 @@ function BooksPage() {
         setPopupBook((prevBook) => ({ ...prevBook, [name]: value }));
     };
     const handleEditBookSubmit = async (e) => {
-        e.preventDefault();
-        try {
+        e.preventDefault();try {
             const response = await fetch(`http://localhost:8081/update-book/${popupBook.book_id}`, {
                 method: "PUT",
                 headers: {
@@ -208,6 +207,7 @@ function BooksPage() {
         setPopupBook(book);
         setShowEditPopup(true);
         setShowPopup(false);
+
     };
 
     const handleClosePopup = () => {
@@ -590,7 +590,7 @@ function BooksPage() {
                                     <input
                                         type="date"
                                         name="publication_date"
-                                        value={popupBook.publication_date}
+                                        value={popupBook.publication_date.split('T')[0]}
                                         onChange={handleEditBookChange}
                                         required
                                     />

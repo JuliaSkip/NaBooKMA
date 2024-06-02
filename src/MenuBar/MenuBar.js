@@ -104,6 +104,66 @@ const MenuBar = () => {
         }
     }
 
+    const handleOrder = async () => {
+        try {
+            const checkResponse = await fetch("http://localhost:8081/create-check", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    total_price: 0,
+                    customer_id: id,
+                    print_date: new Date().toISOString(),
+                    status: 'pending'
+                })
+            });
+
+            if (!checkResponse.ok) {
+                throw new Error("Could not create check");
+            }
+
+            const checkData = await checkResponse.json();
+            const checkNumber = checkData.check_number;
+
+            for (const book of basket) {
+                const purchaseResponse = await fetch("http://localhost:8081/add-purchase", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        book_id: book.book_id,
+                        check_number: checkNumber,
+                        quantity: book.amount,
+                        selling_price: 0
+                    })
+                });
+
+                if (!purchaseResponse.ok) {
+                    throw new Error("Could not add purchase");
+                }
+
+                handleDelete(book.id);
+            }
+
+            setBasket([]);
+            setShowPopup(false);
+            alert("Order placed successfully!");
+
+        } catch (error) {
+            console.error("Error placing order:", error.message);
+            alert("Error placing order. Please try again.");
+        }
+    };
+
+
+    const calculateTotalSum = (basket) => {
+        return basket.reduce((total, item) => total + (item.price * item.amount), 0);
+    };
+
+    const totalSum = calculateTotalSum(basket);
+
     return (
         <div>
             {showPopup && (
@@ -118,13 +178,18 @@ const MenuBar = () => {
                                     <p>Author: {book.author_name}</p>
                                     <p>Price: ${book.price}</p>
                                     <p>Quantity: {book.amount}</p>
-                                    <button className="basket-actions" onClick={() => handleAddToBasket(book)}>+</button>
+                                    <button className="basket-actions" onClick={() => handleAddToBasket(book)}>+
+                                    </button>
                                     <button className="basket-actions" onClick={() => handleDecrement(book)}>-</button>
-                                    <button className="basket-actions" onClick={() => handleDelete(book.id)}>delete</button>
+                                    <button className="basket-actions" onClick={() => handleDelete(book.id)}>delete
+                                    </button>
                                 </div>
-
                             </div>
                         ))}
+                    </div>
+                    <div className="buy-section">
+                        <h3 className="total-sum">Total: ${totalSum.toFixed(2)}</h3>
+                        <button className="buy-button" onClick={handleOrder}>Buy</button>
                     </div>
                 </div>
             )}

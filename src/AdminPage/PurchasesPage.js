@@ -174,7 +174,7 @@ function PurchasesPage() {
                             <div className="check-card" key={check.check_number}>
                                 <h3>Check № {check.check_number}</h3>
                                 <p className="print-date">{formatDate(check.print_date)}</p>
-                                <p className="total-price">{check.total_price} грн</p>
+                                <p className="total-price">{check.total_price} $</p>
                                 <button className="open-check" onClick={() => handleOpenPopup(check)}>⇲</button>
                                 <button className="delete-check" onClick={() => handleDelete(check.check_number)}>⛌</button>
                         </div>
@@ -241,7 +241,7 @@ function PurchasesPage() {
                                                 <p className="amount">
                                                     {purchase.selling_price} x {purchase.quantity}
                                                 </p>
-                                                <p>{(purchase.selling_price * purchase.quantity).toFixed(2)} ₴</p>
+                                                <p>{(purchase.selling_price * purchase.quantity).toFixed(2)} $</p>
                                             </div>
                                         </div>
                                     ))}
@@ -252,7 +252,7 @@ function PurchasesPage() {
                                 <div className="payment-details">
                                     <div className="item">
                                         <h2>Total:</h2>
-                                        <h2>{selectedCheck.total_price} ₴</h2>
+                                        <h2>{selectedCheck.total_price} $</h2>
                                     </div>
                                 </div>
                                 <div className="zigzag-bottom"></div>
