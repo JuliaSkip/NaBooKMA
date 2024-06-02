@@ -439,9 +439,9 @@ function BooksPage() {
                     />
                     <label htmlFor="photo">Profile image:</label>
                     <input
-                        type="file" // Change input type to file
+                        type="file"
                         id="photo"
-                        onChange={(e) => setPhoto(e.target.files[0])} // Store selected photo in state
+                        onChange={(e) => setPhoto(e.target.files[0])}
                     />
                     <select
                         name="language"
@@ -617,6 +617,14 @@ function BooksPage() {
                                         name="genre"
                                         value={popupBook.genre}
                                         onChange={handleEditBookChange}
+                                        onKeyPress={(e) => {
+                                            const charCode = e.which ? e.which : e.keyCode;
+                                            if (!(charCode >= 65 && charCode <= 90) &&
+                                                !(charCode >= 97 && charCode <= 122) &&
+                                                charCode !== 32 && charCode !== 45 && charCode !== 95) {
+                                                e.preventDefault();
+                                            }
+                                        }}
                                         required
                                     />
                                     <input
@@ -652,6 +660,7 @@ function BooksPage() {
                                         name="publication_date"
                                         value={popupBook.publication_date.split('T')[0]}
                                         onChange={handleEditBookChange}
+                                        max={getCurrentDate()}
                                         required
                                     />
                                     <textarea
