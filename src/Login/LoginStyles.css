@@ -4,13 +4,13 @@
     margin-right: 5%;
 
 }
- body {
-     margin: 0;
-     padding: 0;
-     height: 100%;
-     background-image: linear-gradient(to top, rgba(168, 144, 109, 0.62), rgba(232, 152, 38, 0.62) 50%, transparent 100%);
-     background-attachment: fixed;
- }
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-image: linear-gradient(to bottom, rgba(168, 144, 109, 0.62), rgba(232, 152, 38, 0.62) 50%, rgba(255, 255, 255, 0.62) 100%);
+    background-attachment: fixed;
+}
 .full-form {
     display: flex;
     align-items: flex-start;
@@ -40,14 +40,13 @@ form{
 
 }
 .input-field-login {
-    background-color: rgba(232, 152, 38, 0.62);
+    background-color: #d5d5d5;
     color: #000000;
     transition: border-color 0.3s;
     outline: none;
     padding: 10px;
-    border: 1px solid rgba(239, 182, 99, 0.62);
+    border: 1px solid #7e7b7b;
     border-radius: 10px;
-    background-color: #f1daae;
     font-size: 16px;
     width:130%;
 }
@@ -77,6 +76,7 @@ form{
     margin-top:35px;
     margin-left: 5px;
     text-align: center;
+    margin-bottom:30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -88,8 +88,8 @@ form{
     border: none;
     margin-left: 54%;
     font-weight: bolder;
-    margin-top: 10px;
-
+    padding-top: 30px;
+    color: rgb(19, 18, 18);
 }
 
 .login-button:hover {
@@ -100,7 +100,7 @@ form{
 
 .error-message{
     font-size: 30px;
-    font-family: "Copperplate Gothic Bold";
+    font-family: "Copperplate Gothic Bold", serif;
     font-weight: bold;
     color: #ef0909;
     margin-top: -5%;
