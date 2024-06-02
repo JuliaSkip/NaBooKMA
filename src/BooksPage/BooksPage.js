@@ -328,6 +328,8 @@ function BooksPage() {
                         placeholder="Rating"
                         value={newBook.rating}
                         onChange={handleAddBookChange}
+                        min="0"
+                        max="5" step="1"
                         required
                     />
                     <input
@@ -537,7 +539,7 @@ function BooksPage() {
                                     />
                                 )}
                                 <h2>Edit Book</h2>
-                                <form onSubmit={handleEditBookSubmit}>
+                                <form onSubmit={handleEditBookSubmit} className="edit-form" >
                                     <input
                                         type="text"
                                         name="title"
