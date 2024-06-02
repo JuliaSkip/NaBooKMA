@@ -8,13 +8,13 @@ import nonFictionImage from "../BooksPage/non-fiction.png";
 import allImage from "../BooksPage/all.png";
 import { createClient } from "@supabase/supabase-js";
 
+
 function BooksPage() {
     const [fetchError, setFetchError] = useState(null);
     const [books, setBooks] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
     const [formError, setFormError] = useState('');
     const [popupBook, setPopupBook] = useState(null);
-    const [showEditPopup, setShowEditPopup] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState("title");
     const [sortOrder, setSortOrder] = useState("ASC");
@@ -22,6 +22,10 @@ function BooksPage() {
     const [category, setCategory] = useState("all");
     const [showAddForm, setShowAddForm] = useState(false);
     const [photo, setPhoto] = useState(null);
+    const [id, setId] = useState(null);
+    const [showEditPopup, setShowEditPopup] = useState(false);
+
+
 
     const [newBook, setNewBook] = useState({
         id_book: "",
@@ -57,14 +61,10 @@ function BooksPage() {
         }
     };
 
-    useEffect(() => {
-        fetchBooks();
-    }, [sortBy, sortOrder, language, category]);
     const handleEditBookChange = (e) => {
         const { name, value } = e.target;
         setPopupBook((prevBook) => ({ ...prevBook, [name]: value }));
     };
-
     const handleEditBookSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -86,6 +86,11 @@ function BooksPage() {
             console.error("Error editing book:", error.message);
         }
     };
+
+    useEffect(() => {
+        fetchBooks();
+    }, [sortBy, sortOrder, language, category]);
+
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
     };
@@ -228,6 +233,35 @@ function BooksPage() {
         return stars;
     };
 
+    useEffect(() => {
+        const storedId = localStorage.getItem('id');
+        if (storedId) {
+            setId(storedId)
+        }
+    }, []);
+
+    const handleAddToBasket = async (e, book) => {
+        e.stopPropagation();
+        try {
+            const response = await fetch("http://localhost:8081/add-book-to-basket", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    book_id: book.book_id,
+                    customer_id: id,
+                })
+            });
+            if (!response.ok) {
+                throw new Error("Could not add book");
+            }
+        } catch (error) {
+            console.error("Error adding book:", error.message);
+        }
+    };
+
+
     return (
         <div>
             <MenuBar/>
@@ -260,6 +294,7 @@ function BooksPage() {
                     Add Book
                 </button>
             </div>
+
 
             {showAddForm && (
                 <form className="add-book-form" onSubmit={handleAddBookSubmit}>
@@ -343,9 +378,9 @@ function BooksPage() {
                     />
                     <label htmlFor="photo">Profile image:</label>
                     <input
-                        type="file"
+                        type="file" // Change input type to file
                         id="photo"
-                        onChange={(e) => setPhoto(e.target.files[0])}
+                        onChange={(e) => setPhoto(e.target.files[0])} // Store selected photo in state
                     />
                     <select
                         name="language"
@@ -373,6 +408,8 @@ function BooksPage() {
                     <button type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
                 </form>
             )}
+
+
 
             <div className="category-buttons">
                 <div>
@@ -440,14 +477,18 @@ function BooksPage() {
                             <p className="author-name">Author: {book.author_name}</p>
                             <div className="rating">{renderStars(book.rating)}</div>
                             <p className="price">${book.price}</p>
-                            <button className="edit-button" onClick={(e) => handleEditPopup(e, book)}>
+                            { id !== '0' && (<button className="basket-button" onClick={(e) => handleAddToBasket(e, book)}>
+                                Add to Basket
+                            </button>)}
+                            { id === '0' && (<button className="basket-button" onClick={(e) => handleEditPopup(e, book)}>
                                 Edit
-                            </button>
+                            </button>)}
                         </div>
 
                     </div>
                 ))}
             </div>
+
 
             {popupBook && showPopup && (
                 <>
@@ -573,7 +614,6 @@ function BooksPage() {
                     </div>
                 </>
             )}
-
 
             {fetchError && <div>Error: {fetchError}</div>}
             {filteredBooks.length === 0 && <div className="error-message"><h2>No books found.</h2></div>}

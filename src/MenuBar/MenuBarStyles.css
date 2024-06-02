@@ -48,14 +48,14 @@ img{
 .basket-icon{
     position: fixed;
     top:2%;
-    margin-left: 3%;
+    margin-left: 32%;
 
 }
 .log-out{
-    margin-left: 4%;
+    margin-left: 34%;
 }
 
-/* Apply blur effect to elements outside the basket */
+
 body.basket-open > *:not(.basket-overlay) {
     filter: blur(3px);
 }
@@ -71,6 +71,11 @@ body.basket-open > *:not(.basket-overlay) {
     z-index: 1000;
     padding: 20px;
     overflow-y: auto;
+}
+.basket-content h2{
+    position: fixed;
+    top:5px;
+    z-index: 9999;
 }
 
 .close-basket {
@@ -90,3 +95,60 @@ body.basket-open > *:not(.basket-overlay) {
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.basket-card {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.basket-card img {
+    width: 100px;
+    height: auto;
+    margin-right: 20px;
+}
+
+.book-details {
+    flex-grow: 1;
+}
+
+.book-details h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.book-details p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.basket-photo{
+    position: relative;
+    margin-left: 5%;
+}
+.basket-actions{
+    position: relative;
+    margin-right: 5%;
+}
+

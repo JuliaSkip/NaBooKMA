@@ -180,7 +180,8 @@ const Signup = () => {
             if (!response.ok) {
                 throw new Error('An error occurred while registration. Please try again.');
             }
-
+            localStorage.setItem('email', email)
+            //localStorage.setItem('id', customer_id)
             navigate('/nabookma');
         } catch (error) {
             window.alert(error);

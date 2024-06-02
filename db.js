@@ -253,37 +253,77 @@ app.put('/update-profile', async (req, res) => {
             res.status(500).json({ error: error.message });
         });
 });
-app.put('/update-book/:id', async (req, res) => {
-    const { id } = req.params;
-    const {
-        title, author_name, genre, rating, price,
-        publisher_name, publication_date, summary,
-        book_photo_url, language, category, isbn, pages
-    } = req.body;
+app.get('/get-basket', (req, res) => {
+    const { customer_email } = req.query;
 
+    db.any(`SELECT *
+            FROM "Customers" INNER JOIN "Basket" ON "Customers".customer_id = "Basket".customer_id INNER JOIN "Books" ON "Books".book_id = "Basket".book_id
+            WHERE "Customers".customer_email = $1
+            ORDER BY id DESC`, [customer_email])
+        .then(result => {
+            res.json(result);
+        })
+        .catch(error => {
+            console.error('Database query error:', error);
+            res.status(500).json({ error: error.message });
+        });
+});
+app.post('/add-book-to-basket', async (req, res) => {
     try {
-        console.log(publication_date)
-        await db.none(`
-            UPDATE "Books"
-            SET title = $1, author_name = $2, genre = $3, rating = $4, price = $5,
-                publisher_name = $6, publication_date = $7, summary = $8,
-                book_photo_url = $9, language = $10, category = $11, isbn = $12, pages = $13
-            WHERE book_id = $14
-        `, [
-            title, author_name, genre, rating, price,
-            publisher_name, publication_date, summary,
-            book_photo_url, language, category, isbn, pages,
-            id
-        ]);
-        console.log(publication_date)
+        const { book_id, customer_id } = req.body;
 
-        res.json({ message: 'Book updated successfully' });
+        await db.none(`INSERT INTO "Basket" (book_id, customer_id, amount) 
+                             VALUES ($1, $2, '1');`, [book_id, customer_id]);
+        res.json({ message: 'Book added successfully' });
     } catch (error) {
-        res.status(500).json({ error: 'Error updating book: ' + error.message });
+        res.status(500).json({ error: 'Error adding book: ' + error.message });
     }
 });
 
+app.put('/decrement-book-in-basket', async (req, res) => {
+    try {
+        const { book_id, customer_id } = req.body;
 
+        const existingBasketEntry = await db.oneOrNone(`
+            SELECT id, amount 
+            FROM "Basket" 
+            WHERE book_id = $1 AND customer_id = $2;
+        `, [book_id, customer_id]);
+
+        if (!existingBasketEntry) {
+            return res.status(404).json({ error: 'Book not found in the basket' });
+        }
+
+        if (existingBasketEntry.amount === 1) {
+            await db.none(`
+                DELETE FROM "Basket" 
+                WHERE id = $1;
+            `, [existingBasketEntry.id]);
+        } else {
+            await db.none(`
+                UPDATE "Basket" 
+                SET amount = amount - 1 
+                WHERE id = $1;
+            `, [existingBasketEntry.id]);
+        }
+
+        res.json({ message: 'Book quantity decremented successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error decrementing book quantity: ' + error.message });
+    }
+});
+app.delete('/delete-book-from-basket/:bookId', async (req, res) => {
+    const { bookId } = req.params;
+    try {
+        await db.none(`
+            DELETE FROM "Basket" 
+            WHERE id = $1;
+        `, [bookId]);
+        res.json({ message: 'Book removed from the basket successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error removing book from the basket: ' + error.message });
+    }
+});
 
 /*
 * *

@@ -30,6 +30,7 @@ function Login() {
 
             setDbPassword(userData[0].password);
             localStorage.setItem('email', userData[0].customer_email)
+            localStorage.setItem('id', userData[0].customer_id)
 
         } catch (error) {
         }
