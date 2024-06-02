@@ -253,6 +253,36 @@ app.put('/update-profile', async (req, res) => {
             res.status(500).json({ error: error.message });
         });
 });
+app.put('/update-book/:id', async (req, res) => {
+    const { id } = req.params;
+    const {
+        title, author_name, genre, rating, price,
+        publisher_name, publication_date, summary,
+        book_photo_url, language, category, isbn, pages
+    } = req.body;
+
+    try {
+        console.log(publication_date)
+        await db.none(`
+            UPDATE "Books"
+            SET title = $1, author_name = $2, genre = $3, rating = $4, price = $5,
+                publisher_name = $6, publication_date = $7, summary = $8,
+                book_photo_url = $9, language = $10, category = $11, isbn = $12, pages = $13
+            WHERE book_id = $14
+        `, [
+            title, author_name, genre, rating, price,
+            publisher_name, publication_date, summary,
+            book_photo_url, language, category, isbn, pages,
+            id
+        ]);
+        console.log(publication_date)
+
+        res.json({ message: 'Book updated successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error updating book: ' + error.message });
+    }
+});
+
 
 
 /*

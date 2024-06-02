@@ -8,22 +8,20 @@ import nonFictionImage from "../BooksPage/non-fiction.png";
 import allImage from "../BooksPage/all.png";
 import { createClient } from "@supabase/supabase-js";
 
-
 function BooksPage() {
     const [fetchError, setFetchError] = useState(null);
     const [books, setBooks] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
     const [formError, setFormError] = useState('');
     const [popupBook, setPopupBook] = useState(null);
+    const [showEditPopup, setShowEditPopup] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState("title");
     const [sortOrder, setSortOrder] = useState("ASC");
     const [language, setLanguage] = useState("all");
     const [category, setCategory] = useState("all");
     const [showAddForm, setShowAddForm] = useState(false);
-    const [showEditForm, setShowEditForm] = useState(false);
     const [photo, setPhoto] = useState(null);
-    const [showBasket, setShowBasket] = useState(false);
 
     const [newBook, setNewBook] = useState({
         id_book: "",
@@ -62,7 +60,32 @@ function BooksPage() {
     useEffect(() => {
         fetchBooks();
     }, [sortBy, sortOrder, language, category]);
+    const handleEditBookChange = (e) => {
+        const { name, value } = e.target;
+        setPopupBook((prevBook) => ({ ...prevBook, [name]: value }));
+    };
 
+    const handleEditBookSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(`http://localhost:8081/update-book/${popupBook.book_id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(popupBook)
+            });
+            if (!response.ok) {
+                throw new Error("Could not update book");
+            }
+            const result = await response.json();
+
+            setShowEditPopup(false);
+            fetchBooks();
+        } catch (error) {
+            console.error("Error editing book:", error.message);
+        }
+    };
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
     };
@@ -172,10 +195,19 @@ function BooksPage() {
     const handlePopup = (book) => {
         setPopupBook(book);
         setShowPopup(true);
+        setShowEditPopup(false);
+    };
+
+    const handleEditPopup = (e, book) => {
+        e.stopPropagation();
+        setPopupBook(book);
+        setShowEditPopup(true);
+        setShowPopup(false);
     };
 
     const handleClosePopup = () => {
         setShowPopup(false);
+        setShowEditPopup(false);
         setPopupBook(null);
     };
 
@@ -194,11 +226,6 @@ function BooksPage() {
             }
         }
         return stars;
-    };
-
-    const handleAddToBasket = (e, book) => {
-        e.stopPropagation();
-        console.log("Book added to basket:", book);
     };
 
     return (
@@ -234,8 +261,7 @@ function BooksPage() {
                 </button>
             </div>
 
-
-            {showAddForm || showEditForm && (
+            {showAddForm && (
                 <form className="add-book-form" onSubmit={handleAddBookSubmit}>
                     <input
                         type="text"
@@ -317,9 +343,9 @@ function BooksPage() {
                     />
                     <label htmlFor="photo">Profile image:</label>
                     <input
-                        type="file" // Change input type to file
+                        type="file"
                         id="photo"
-                        onChange={(e) => setPhoto(e.target.files[0])} // Store selected photo in state
+                        onChange={(e) => setPhoto(e.target.files[0])}
                     />
                     <select
                         name="language"
@@ -347,8 +373,6 @@ function BooksPage() {
                     <button type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
                 </form>
             )}
-
-
 
             <div className="category-buttons">
                 <div>
@@ -416,15 +440,14 @@ function BooksPage() {
                             <p className="author-name">Author: {book.author_name}</p>
                             <div className="rating">{renderStars(book.rating)}</div>
                             <p className="price">${book.price}</p>
-                            <button className="basket-button" onClick={(e) => handleAddToBasket(e, book)}>
-                                Add to Basket
+                            <button className="edit-button" onClick={(e) => handleEditPopup(e, book)}>
+                                Edit
                             </button>
                         </div>
 
                     </div>
                 ))}
             </div>
-
 
             {popupBook && showPopup && (
                 <>
@@ -452,6 +475,99 @@ function BooksPage() {
                                 <button className="delete-button" onClick={() => handleDeleteBook(popupBook.book_id)}>
                                     Delete Book
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
+
+            {popupBook && showEditPopup && (
+                <>
+                    <div className="overlay" onClick={handleClosePopup}></div>
+                    <div className="popup-container-book">
+                        <div className="popup">
+                            <div className="popup-content-book">
+                                <span className="close" onClick={handleClosePopup}>&times;</span>
+                                {popupBook.book_photo_url && (
+                                    <img
+                                        src={popupBook.book_photo_url}
+                                        alt="Book Cover"
+                                        className="book-photo"
+                                    />
+                                )}
+                                <h2>Edit Book</h2>
+                                <form onSubmit={handleEditBookSubmit}>
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        value={popupBook.title}
+                                        onChange={handleEditBookChange}
+                                        required
+                                    />
+                                    <input
+                                        type="text"
+                                        name="author_name"
+                                        value={popupBook.author_name}
+                                        onChange={handleEditBookChange}
+                                        required
+                                    />
+                                    <input
+                                        type="text"
+                                        name="genre"
+                                        value={popupBook.genre}
+                                        onChange={handleEditBookChange}
+                                        required
+                                    />
+                                    <input
+                                        type="number"
+                                        name="rating"
+                                        value={popupBook.rating}
+                                        onChange={handleEditBookChange}
+                                        required
+                                    />
+                                    <input
+                                        type="number"
+                                        name="pages"
+                                        value={popupBook.pages}
+                                        onChange={handleEditBookChange}
+                                        required
+                                    />
+                                    <input
+                                        type="number"
+                                        name="price"
+                                        value={popupBook.price}
+                                        onChange={handleEditBookChange}
+                                        required
+                                    />
+                                    <input
+                                        type="text"
+                                        name="publisher_name"
+                                        value={popupBook.publisher_name}
+                                        onChange={handleEditBookChange}
+                                        required
+                                    />
+                                    <input
+                                        type="date"
+                                        name="publication_date"
+                                        value={popupBook.publication_date}
+                                        onChange={handleEditBookChange}
+                                        required
+                                    />
+                                    <textarea
+                                        name="summary"
+                                        value={popupBook.summary}
+                                        onChange={handleEditBookChange}
+                                        required
+                                    />
+                                    <label htmlFor="photo">Profile image:</label>
+                                    <input
+                                        type="file"
+                                        id="photo"
+                                        onChange={(e) => setPhoto(e.target.files[0])}
+                                    />
+                                    <button type="submit">Submit</button>
+                                    <button type="button" onClick={() => setShowEditPopup(false)}>Cancel</button>
+                                </form>
                             </div>
                         </div>
                     </div>
