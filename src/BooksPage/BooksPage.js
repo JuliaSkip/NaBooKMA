@@ -242,6 +242,22 @@ function BooksPage() {
         setShowEditPopup(false);
         setPopupBook(null);
     };
+    function getCurrentDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        let month = today.getMonth() + 1;
+        let day = today.getDate();
+
+        if (month < 10) {
+            month = `0${month}`;
+        }
+        if (day < 10) {
+            day = `0${day}`;
+        }
+
+        return `${year}-${month}-${day}`;
+    }
+
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -347,6 +363,14 @@ function BooksPage() {
                         placeholder="Genre"
                         value={newBook.genre}
                         onChange={handleAddBookChange}
+                        onKeyPress={(e) => {
+                            const charCode = e.which ? e.which : e.keyCode;
+                            if (!(charCode >= 65 && charCode <= 90) &&
+                                !(charCode >= 97 && charCode <= 122) &&
+                                charCode !== 32 && charCode !== 45 && charCode !== 95) {
+                                e.preventDefault();
+                            }
+                        }}
                         required
                     />
                     <input
@@ -360,11 +384,17 @@ function BooksPage() {
                         required
                     />
                     <input
-                        type="number"
+                        type="text"
                         name="isbn"
                         placeholder="ISBN"
                         value={newBook.isbn}
                         onChange={handleAddBookChange}
+                        onKeyPress={(e) => {
+                            const charCode = e.which ? e.which : e.keyCode;
+                            if (!((charCode >= 48 && charCode <= 57) || charCode === 45)) {
+                                e.preventDefault();
+                            }
+                        }}
                         required
                     />
                     <input
@@ -396,8 +426,10 @@ function BooksPage() {
                         name="publication_date"
                         value={newBook.publication_date}
                         onChange={handleAddBookChange}
+                        max={getCurrentDate()}
                         required
                     />
+
                     <textarea
                         name="summary"
                         placeholder="Summary"
@@ -437,7 +469,6 @@ function BooksPage() {
                     <button type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
                 </form>
             )}
-
 
 
             <div className="category-buttons">
