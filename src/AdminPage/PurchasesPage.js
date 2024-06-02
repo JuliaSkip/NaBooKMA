@@ -11,8 +11,7 @@ function PurchasesPage() {
     const [sortBy, setSortBy] = useState("check_number");
     const [sortOrder, setSortOrder] = useState("ASC");
     const [searchQuery, setSearchQuery] = useState("");
-    const [filter, setFilter] = useState("all"); // State for filter
-
+    const [filter, setFilter] = useState("all");
 
     const fetchChecks = async () => {
         try {
