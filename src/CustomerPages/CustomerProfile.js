@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import MenuBar from "../MenuBar/MenuBar";
 import "./CustomerProfileStyles.css";
 import bcrypt from "bcryptjs";
+import {createClient} from "@supabase/supabase-js";
 
 function CustomerProfile() {
     const [profile, setProfile] = useState([]);
@@ -17,6 +18,7 @@ function CustomerProfile() {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+    const [photo, setPhoto] = useState(null);
     const [updatedProfile, setUpdatedProfile] = useState({
         cust_name: '',
         cust_patronymic: '',
@@ -215,15 +217,43 @@ function CustomerProfile() {
         }));
     };
 
+
+    const supabase = createClient('https://upkigeauanwefsngyhqb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwa2lnZWF1YW53ZWZzbmd5aHFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYyMjQxOTQsImV4cCI6MjAzMTgwMDE5NH0.s60GCwAeFC5zdmGKiJ0oxm7WXf2gcsCUWkUhEguUlvM');
+
+
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
         try {
+            let photoUrl = profile.customer_photo_url;
+
+            if (photo) {
+                const { data, error } = await supabase.storage
+                    .from('customers')
+                    .upload(`public/${photo.name}`, photo, {
+                        cacheControl: '3600',
+                        upsert: false,
+                    });
+
+                if (error) {
+                    console.error('Error uploading photo:', error.message);
+                    return;
+                }
+
+                photoUrl = `https://upkigeauanwefsngyhqb.supabase.co/storage/v1/object/public/customers/${photo.name}`;
+            }
+
+            const profileToSubmit = {
+                ...updatedProfile,
+                customer_photo_url: photoUrl,
+                customer_email: email,
+            };
+
             const response = await fetch(`http://localhost:8081/update-profile`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ ...updatedProfile, customer_email: email })
+                body: JSON.stringify(profileToSubmit),
             });
 
             if (!response.ok) {
@@ -238,6 +268,7 @@ function CustomerProfile() {
         }
     };
 
+
     return (
         <div>
             <MenuBar />
@@ -250,7 +281,7 @@ function CustomerProfile() {
                                 <h2>{profile.cust_name} {profile.cust_patronymic} {profile.cust_surname}</h2>
                                 <p>Email: {profile.customer_email}</p>
                                 <hr />
-                                <p>Phone number: +{profile.phone_number}</p>
+                                <p>Phone number: {profile.phone_number}</p>
                                 <hr />
                                 <div className="action">
                                 <button onClick={handleOpenProfileEditPopup}>Edit Profile</button>
@@ -491,6 +522,12 @@ function CustomerProfile() {
                                     value={updatedProfile.zip_code}
                                     onChange={handleProfileChange}
                                     required
+                                />
+                                <label htmlFor="photo">Profile image:</label>
+                                <input
+                                    type="file"
+                                    id="photo"
+                                    onChange={(e) => setPhoto(e.target.files[0])}
                                 />
                                 {error && <p className="error">{error}</p>}
                                 <button type="button" onClick={handleCloseProfileEditPopup}>Cancel</button>

@@ -5,7 +5,7 @@
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1000;
+    z-index: 9999;
 }
 .nav-item {
     display: inline;
@@ -56,7 +56,11 @@ img{
 body.basket-open > *:not(.basket-overlay) {
     filter: blur(3px);
 }
-
+.basket-card{
+     position: fixed;
+     top: 100px;
+     right: 0;
+ }
 .basket-content {
     position: fixed;
     top: 0;

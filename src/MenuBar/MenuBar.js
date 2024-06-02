@@ -7,9 +7,8 @@ import React, {useEffect, useState} from "react";
 const MenuBar = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [basket, setBasket] = useState([]);
-    const [id, setId] = useState([]);
-    const [email, setEmail] = useState([]);
-
+    const [id, setId] = useState(null);
+    const [email, setEmail] = useState(null);
 
 
     const fetchBasket = async (email) => {
@@ -202,25 +201,24 @@ const MenuBar = () => {
                             </NavLink>
                         </li>
                         <img src={nabookma} alt="Your Alt Text"/>
-                        <li className="nav-item">
+                        {id === "0" && ( <li className="nav-item">
                             <NavLink to="/customers" className="nav-link" activeClassName="active">Customers</NavLink>
-                        </li>
-                        <li className="nav-item">
+                        </li>)}
+                        {id === "0" && (  <li className="nav-item">
                             <NavLink to="/purchases" className="nav-link" activeClassName="active">Purchases</NavLink>
-                        </li>
+                        </li>)}
                         <li className="nav-item">
                             <NavLink to="/books" className="nav-link" activeClassName="active">Books</NavLink>
                         </li>
                         <li className="nav-item">
                             <NavLink to="/me" className="nav-link" activeClassName="active">My profile</NavLink>
                         </li>
-                        <li className="nav-item basket-icon">
+                        {id !== "0" && (  <li className="nav-item basket-icon">
                             <img src={basketIcon} alt="Basket" onClick={handleBasket}/>
-                        </li>
-                        <li className="nav-item log-out"></li>
-                        {!showPopup && ( <li className="nav-item log-out">
-                            <NavLink to="/" className="nav-link" activeClassName="active">Log out</NavLink>
                         </li>)}
+                        <li className="nav-item log-out">
+                            <NavLink to="/" className="nav-link" activeClassName="active">Log out</NavLink>
+                        </li>
 
                     </ul>
                 </nav>

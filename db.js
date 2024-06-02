@@ -239,20 +239,21 @@ app.put('/change-password', (req, res) => {
 });
 
 app.put('/update-profile', async (req, res) => {
-    const { cust_name, cust_patronymic, cust_surname, phone_number, city, street, zip_code, customer_email} = req.body;
-    db.none(`UPDATE "Customers" 
-             SET cust_name = $1, cust_patronymic = $2, 
-                 cust_surname = $3, phone_number = $4, 
-                 city = $5, street = $6, zip_code = $7 
-             WHERE customer_email = $8`,
-            [cust_name, cust_patronymic, cust_surname, phone_number, city, street, zip_code, customer_email])
-        .then(() => {
-            res.json({ message: 'Profile updated successfully' });
-        })
-        .catch(error => {
-            res.status(500).json({ error: error.message });
-        });
+    const { cust_name, cust_patronymic, cust_surname, phone_number, city, street, zip_code, customer_photo_url, customer_email } = req.body;
+
+    try {
+        await db.none(`UPDATE "Customers" 
+                       SET cust_name = $1, cust_patronymic = $2, 
+                           cust_surname = $3, phone_number = $4, 
+                           city = $5, street = $6, zip_code = $7, customer_photo_url = $8
+                       WHERE customer_email = $9`,
+            [cust_name, cust_patronymic, cust_surname, phone_number, city, street, zip_code, customer_photo_url, customer_email]);
+        res.json({ message: 'Profile updated successfully' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
+
 app.get('/get-basket', (req, res) => {
     const { customer_email } = req.query;
 

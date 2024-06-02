@@ -283,6 +283,22 @@ function BooksPage() {
         }
     }, []);
 
+    function getCurrentDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        let month = today.getMonth() + 1;
+        let day = today.getDate();
+
+        if (month < 10) {
+            month = `0${month}`;
+        }
+        if (day < 10) {
+            day = `0${day}`;
+        }
+
+        return `${year}-${month}-${day}`;
+    }
+
     const handleAddToBasket = async (e, book) => {
         e.stopPropagation();
         try {
@@ -332,11 +348,11 @@ function BooksPage() {
                     <option value="English">English</option>
                 </select>
             </div>
-            <div style={{ marginTop: "20px" }}>
+            {id === "0" && (  <div style={{ marginTop: "20px" }}>
                 <button className="add-book-button" onClick={() => setShowAddForm(!showAddForm)}>
                     Add Book
                 </button>
-            </div>
+            </div>)}
 
 
             {showAddForm && (
@@ -537,10 +553,10 @@ function BooksPage() {
                             <p className="author-name">Author: {book.author_name}</p>
                             <div className="rating">{renderStars(book.rating)}</div>
                             <p className="price">${book.price}</p>
-                            { id !== '0' && (<button className="basket-button" onClick={(e) => handleAddToBasket(e, book)}>
+                            { id !== "0" && (<button className="basket-button" onClick={(e) => handleAddToBasket(e, book)}>
                                 Add to Basket
                             </button>)}
-                            { id === '0' && (<button className="basket-button" onClick={(e) => handleEditPopup(e, book)}>
+                            { id === "0" && (<button className="basket-button" onClick={(e) => handleEditPopup(e, book)}>
                                 Edit
                             </button>)}
                         </div>
@@ -573,9 +589,9 @@ function BooksPage() {
                                 <p><b>Publisher:</b> {popupBook.publisher_name}</p>
                                 <p><b>Published Date:</b> {formatDate(popupBook.publication_date)}</p>
                                 <p><b>Description:</b> {popupBook.summary}</p>
-                                <button className="delete-button" onClick={() => handleDeleteBook(popupBook.book_id)}>
+                                {id === "0" && ( <button className="delete-button" onClick={() => handleDeleteBook(popupBook.book_id)}>
                                     Delete Book
-                                </button>
+                                </button>)}
                             </div>
                         </div>
                     </div>
