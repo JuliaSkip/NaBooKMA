@@ -232,3 +232,59 @@
 .book-name:hover .book-image, .book-name:hover .book-summary{
     display: block;
 }
+
+
+
+
+@media only screen and (max-width: 600px) {
+    .search-bar-checks {
+        top: 250px;
+    }
+
+    .sort-checks {
+        top: 250px;
+    }
+
+    .check.page {
+        margin-top: 250px;
+    }
+    .receipt{
+        margin-top:250px;
+    }
+}
+
+
+@media only screen and (min-width: 601px) and (max-width: 768px) {
+    .search-bar-checks {
+        top: 190px;
+    }
+
+    .sort-checks {
+        top: 190px;
+    }
+
+    .check.page {
+        margin-top: 150px;
+    }
+    .receipt{
+        margin-top:150px;
+    }
+}
+
+
+@media only screen and (min-width: 769px) {
+    .search-bar-checks {
+        top: 150px;
+    }
+
+    .sort-checks {
+        top: 150px;
+    }
+
+    .check.page {
+        margin-top: 150px;
+    }
+    .receipt{
+        margin-top:200px;
+    }
+}

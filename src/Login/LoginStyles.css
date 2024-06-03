@@ -8,7 +8,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100%;
-    background-image: linear-gradient(to bottom, rgba(168, 144, 109, 0.62), rgba(232, 152, 38, 0.62) 50%, rgba(255, 255, 255, 0.62) 100%);
+
     background-attachment: fixed;
 }
 .full-form {
