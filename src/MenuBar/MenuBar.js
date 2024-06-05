@@ -4,11 +4,13 @@ import {NavLink} from "react-router-dom";
 import basketIcon from './basket.png';
 import React, {useEffect, useState} from "react";
 
-const MenuBar = () => {
+const MenuBar = ({length_b}) => {
     const [showPopup, setShowPopup] = useState(false);
     const [basket, setBasket] = useState([]);
     const [id, setId] = useState(null);
     const [email, setEmail] = useState(null);
+
+
 
 
     const fetchBasket = async (email) => {
@@ -41,7 +43,7 @@ const MenuBar = () => {
             if (!response.ok) {
                 throw new Error("Could not add book");
             }
-            fetchBasket(email)
+            fetchBasket(email);
         } catch (error) {
             console.error("Error adding book:", error.message);
         }
@@ -85,23 +87,23 @@ const MenuBar = () => {
     useEffect(() => {
         const storedEmail = localStorage.getItem('email');
         if (storedEmail) {
-            fetchBasket(storedEmail)
-            setEmail(storedEmail)
+            setEmail(storedEmail);
+            fetchBasket(storedEmail);
         }
         const storedId = localStorage.getItem('id');
         if (storedId) {
-            setId(storedId)
+            setId(storedId);
         }
     }, []);
 
-    const handleBasket = () =>{
-        if(showPopup){
-            setShowPopup(false)
-        }else{
-            setShowPopup(true)
-            fetchBasket(email)
+    const handleBasket = () => {
+        if (showPopup) {
+            setShowPopup(false);
+        } else {
+            setShowPopup(true);
+            fetchBasket(email);
         }
-    }
+    };
 
     const handleOrder = async () => {
         try {
@@ -156,7 +158,6 @@ const MenuBar = () => {
         }
     };
 
-
     const calculateTotalSum = (basket) => {
         return basket.reduce((total, item) => total + (item.price * item.amount), 0);
     };
@@ -170,18 +171,16 @@ const MenuBar = () => {
                     <div className="basket-content">
                         <h2>Your Basket</h2>
                         {basket.map((book, index) => (
-                            <div className="basket-card">
+                            <div className="basket-card" key={index}>
                                 <img src={book.book_photo_url} alt={book.title} className="basket-photo"/>
                                 <div className="book-details">
                                     <h3>{book.title}</h3>
                                     <p>Author: {book.author_name}</p>
                                     <p>Price: ${book.price}</p>
                                     <p>Quantity: {book.amount}</p>
-                                    <button className="basket-actions" onClick={() => handleAddToBasket(book)}>+
-                                    </button>
+                                    <button className="basket-actions" onClick={() => handleAddToBasket(book)}>+</button>
                                     <button className="basket-actions" onClick={() => handleDecrement(book)}>-</button>
-                                    <button className="basket-actions" onClick={() => handleDelete(book.id)}>delete
-                                    </button>
+                                    <button className="basket-actions" onClick={() => handleDelete(book.id)}>delete</button>
                                 </div>
                             </div>
                         ))}
@@ -201,25 +200,41 @@ const MenuBar = () => {
                             </NavLink>
                         </li>
                         <img src={nabookma} alt="Your Alt Text" className="book-icon"/>
-                        {id === "0" && ( <li className="nav-item">
-                            <NavLink to="/customers" className="nav-link" activeClassName="active">Customers</NavLink>
-                        </li>)}
-                        {id === "0" && (  <li className="nav-item">
-                            <NavLink to="/purchases" className="nav-link" activeClassName="active">Purchases</NavLink>
-                        </li>)}
+                        {id === "0" && (
+                            <li className="nav-item">
+                                <NavLink to="/customers" className="nav-link" activeClassName="active">Customers</NavLink>
+                            </li>
+                        )}
+                        {id === "0" && (
+                            <li className="nav-item">
+                                <NavLink to="/purchases" className="nav-link" activeClassName="active">Purchases</NavLink>
+                            </li>
+                        )}
                         <li className="nav-item">
                             <NavLink to="/books" className="nav-link" activeClassName="active">Books</NavLink>
                         </li>
                         <li className="nav-item">
                             <NavLink to="/me" className="nav-link" activeClassName="active">My profile</NavLink>
                         </li>
-                        {id !== "0" && (  <li className="nav-item basket-icon">
-                            <img src={basketIcon} alt="Basket" onClick={handleBasket}/>
-                        </li>)}
+                        {id !== "0" && !showPopup && (
+                            <li className="nav-item basket-icon">
+                                <div className="basket-container" onClick={handleBasket}>
+                                    <img src={basketIcon} alt="Basket" />
+                                    {length_b> 0 && <span className="basket-count">{length_b}</span>}
+                                </div>
+                            </li>
+                        )}
+                        {id !== "0" && showPopup && (
+                            <li className="nav-item basket-icon">
+                                <div className="basket-container" onClick={handleBasket}>
+                                    <img src={basketIcon} alt="Basket" />
+                                    {basket.length> 0 && <span className="basket-count">{basket.length}</span>}
+                                </div>
+                            </li>
+                        )}
                         <li className="nav-item log-out">
                             <NavLink to="/" className="nav-link" activeClassName="active">Log out</NavLink>
                         </li>
-
                     </ul>
                 </nav>
             </header>

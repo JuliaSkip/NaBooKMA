@@ -23,13 +23,17 @@ function BooksPage() {
     const [showAddForm, setShowAddForm] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [id, setId] = useState(null);
+    const [email, setEmail] = useState(null);
     const [showEditPopup, setShowEditPopup] = useState(false);
+
 
     const [searchAuthor, setSearchAuthor] = useState("");
     const [searchGenre, setSearchGenre] = useState("");
     const [searchPrice, setSearchPrice] = useState("");
     const [searchYear, setSearchYear] = useState("");
     const [searchRating, setSearchRating] = useState("");
+
+    const [basket, setBasket] = useState([]);
 
 
 
@@ -72,6 +76,20 @@ function BooksPage() {
         setPopupBook((prevBook) => ({ ...prevBook, [name]: value }));
     };
 
+    const fetchBasket = async (email) => {
+        try {
+            const response = await fetch(
+                `http://localhost:8081/get-basket?customer_email=${email}`
+            );
+            if (!response.ok) {
+                throw new Error("Could not fetch basket");
+            }
+            const data = await response.json();
+            setBasket(data);
+        } catch (error) {
+            setBasket([]);
+        }
+    };
 
     const handleEditBookSubmit = async (e) => {
         e.preventDefault();
@@ -135,10 +153,6 @@ function BooksPage() {
         setSearchGenre(e.target.value);
     };
 
-    const handleSearchPrice = (e) => {
-        setSearchPrice(e.target.value);
-    };
-
     const handleSearchRating = (e) => {
         setSearchRating(e.target.value);
     };
@@ -146,6 +160,7 @@ function BooksPage() {
     const handleSearchYear = (e) => {
         setSearchYear(e.target.value);
     };
+
 
     const handleLanguageChange = (e) => {
         setLanguage(e.target.value);
@@ -213,6 +228,7 @@ function BooksPage() {
             setPhoto(null);
             setShowAddForm(false);
             fetchBooks();
+
         } catch (error) {
             console.error("Error adding book:", error.message);
         }
@@ -238,10 +254,12 @@ function BooksPage() {
         const matchesAuthor = book.author_name.toLowerCase().startsWith(searchAuthor.toLowerCase());
         const matchesGenre = book.genre.toLowerCase().startsWith(searchGenre.toLowerCase());
         const matchesPrice = searchPrice ? book.price <= parseFloat(searchPrice) : true;
+        const matchesRating = searchRating ? book.rating <= parseFloat(searchRating) : true;
         const matchesYear = searchYear ? book.publication_date.startsWith(searchYear) : true;
         const matchesLanguage = language === "all" || book.language === language;
         const matchesCategory = category === "all" || book.category === category;
-        return matchesSearch && matchesAuthor && matchesGenre && matchesPrice && matchesYear && matchesLanguage && matchesCategory;
+        return matchesSearch && matchesAuthor && matchesGenre && matchesPrice && matchesYear
+            && matchesLanguage && matchesCategory && matchesRating;
     });
 
     const handleSort = (e) => {
@@ -292,6 +310,11 @@ function BooksPage() {
         if (storedId) {
             setId(storedId)
         }
+        const storedEmail = localStorage.getItem('email');
+        if (storedEmail) {
+            fetchBasket(storedEmail);
+            setEmail(storedEmail)
+        }
     }, []);
 
     function getCurrentDate() {
@@ -326,6 +349,7 @@ function BooksPage() {
             if (!response.ok) {
                 throw new Error("Could not add book");
             }
+            fetchBasket(email)
         } catch (error) {
             console.error("Error adding book:", error.message);
         }
@@ -334,7 +358,7 @@ function BooksPage() {
 
     return (
         <div className="entire-page">
-            <MenuBar/>
+            <MenuBar length_b={basket.length}/>
             <div className="book-actions">
                 <div className="search-container">
                     <input
@@ -354,12 +378,6 @@ function BooksPage() {
                         value={searchGenre}
                         onChange={handleSearchGenre}
                         placeholder="Search by genre..."
-                    />
-                    <input
-                        type="number"
-                        value={searchPrice}
-                        onChange={handleSearchPrice}
-                        placeholder="Search by price..."
                     />
                     <input
                         type="number"
