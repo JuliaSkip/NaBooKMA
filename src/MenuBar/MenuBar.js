@@ -200,7 +200,7 @@ const MenuBar = () => {
                                 <span className="nabookma">Na<span className="book">BooK</span>MA</span>
                             </NavLink>
                         </li>
-                        <img src={nabookma} alt="Your Alt Text"/>
+                        <img src={nabookma} alt="Your Alt Text" className="book-icon"/>
                         {id === "0" && ( <li className="nav-item">
                             <NavLink to="/customers" className="nav-link" activeClassName="active">Customers</NavLink>
                         </li>)}

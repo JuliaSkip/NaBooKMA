@@ -1,7 +1,12 @@
-.search-bar-books {
-    width: 32.2%;
+.entire-page{
+    position: relative;
+    top: 50px;
+}
+.search-container input {
+    width: 150px;
     padding: 10px;
     margin-bottom: 20px;
+    margin-left: 10px;
     border: 1px solid #f1daae;
     background-color: #f1daae;
     border-radius: 10px;
@@ -9,14 +14,21 @@
     position: relative;
     top: 100px;
     left: 10.25%;
+
 }
-.search-bar-books:focus {
+.search-container input:focus {
     border: 2px solid black;
     outline: none;
 }
+.search-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 85%;
+}
 .sort-books{
     background-color: rgba(232, 152, 38, 0.62);
-    width: 10%;
+    width: 200px;
     border: 1px solid rgba(239, 182, 99, 0.62);
     padding: 8px;
     margin: 10px;
@@ -29,7 +41,7 @@
 }
 .language-select {
     background-color: rgba(232, 152, 38, 0.62);
-    width: 10%;
+    width: 200px;
     border: 1px solid rgba(239, 182, 99, 0.62);
     padding: 8px;
     margin: 10px;
@@ -43,6 +55,7 @@
 }
 
 .category-buttons {
+    display: grid;
     width:200px;
     height:200px;
     margin: 50px 0 -150px 10%;
@@ -232,7 +245,7 @@ body{
 }
 .add-book-button {
     background-color: rgba(232, 152, 38, 0.62);
-    width: 10%;
+    width: 200px;
     border: 1px solid rgba(239, 182, 99, 0.62);
     padding: 8px;
     border-radius: 10px;
@@ -405,9 +418,12 @@ body{
 .edit-form{
     margin-left: 6%;
 }
-@media only screen and (max-width: 1200px) {
-    .search-bar-books, .sort-books, .language-select, .add-book-button {
-        top: 180px;
+
+
+@media (max-width: 1220px) {
+    .entire-page{
+        position: relative;
+        margin-top: 80px;
     }
 
     .category-buttons {
@@ -415,26 +431,15 @@ body{
         margin: 140px auto 50px;
     }
 
-    .book-cards {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        width: 80%;
-        margin-left: 10%;
-        margin-top:0;
-    }
 
-    .book-card {
-        width: 250px;
-    }
 }
 
 @media only screen and (max-width: 992px) {
     .search-bar-books, .sort-books, .language-select{
-        top: 200px;
         width: 80%;
         left: 10%;
     }
     .add-book-button {
-        top: 200px;
         width: 80%;
         left: 11%;
     }
@@ -443,28 +448,21 @@ body{
         width: 90%;
         margin: 160px auto 50px 10%;
     }
-
-    .book-cards {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        width: 90%;
-        margin-left: 5%;
-        margin-top:10px;
-    }
-
-    .book-card {
-        width: 100%;
-    }
 }
-@media only screen and (max-width: 768px) {
+
+@media (max-width: 750px) {
+    .entire-page{
+        position: relative;
+        margin-top: 100px;
+    }
+
     .search-bar-books, .sort-books, .language-select{
         width: 60%;
         left: 20%;
-        top: 200px;
     }
     .add-book-button {
         width: 60%;
         left: 20%;
-        top: 200px;
         margin-left:1.5%;
     }
 
@@ -474,29 +472,19 @@ body{
         margin: 30% 20px 60%;
     }
 
-    .book-cards {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        width: 90%;
-        margin-left: 5%;
-    }
-
-    .book-card {
-        width: 100%;
-    }
 }
 
-@media only screen and (max-width: 600px) {
+@media (max-width: 610px) {
+    .entire-page{
+        position: relative;
+    }
     .search-bar-books, .sort-books, .language-select {
         width: 80%;
         left: 10%;
-        top: 250px;
     }
-
-
     .add-book-button{
         width: 80%;
         left: 10%;
-        top: 250px;
         margin-left:2%;
     }
 
@@ -505,23 +493,15 @@ body{
         width: 90%;
         margin: 50% auto 50px;
     }
-
-    .book-cards {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        width: 90%;
-        margin-left: 5%;
-        margin-top:150px;
-    }
-
-    .book-card {
-        width: 90%;
-        top: 270px;
-        bottom:900px;
-    }
     footer{
         margin-top:300px;
     }
 }
 
-
+@media (max-width: 465px) {
+    .entire-page{
+        position: relative;
+        margin-top: 270px;
+    }
+}
 

@@ -12,6 +12,8 @@ function PurchasesPage() {
     const [sortOrder, setSortOrder] = useState("ASC");
     const [searchQuery, setSearchQuery] = useState("");
     const [filter, setFilter] = useState("all");
+    const [allCustomers, setAllCustomers] = useState([]);
+
 
 
     const fetchChecks = async () => {
@@ -28,6 +30,23 @@ function PurchasesPage() {
         } catch (error) {
             setFetchError(error.message);
             setChecks([]);
+        }
+    };
+
+    const fetchCustomers = async () => {
+        try {
+            const response = await fetch(
+                `http://localhost:8081/get-customers?sortBy=${"cust_surname"}&sortOrder=${"ASC"}`
+            );
+            if (!response.ok) {
+                throw new Error("Could not fetch customers");
+            }
+            const data = await response.json();
+            setAllCustomers(data);
+            setFetchError(null);
+        } catch (error) {
+            setFetchError(error.message);
+            setAllCustomers([]);
         }
     };
 
@@ -50,6 +69,7 @@ function PurchasesPage() {
 
     useEffect(() => {
         fetchChecks();
+        fetchCustomers()
     }, [sortBy, sortOrder]);
 
     const handleSort = (columnName) => {
@@ -87,7 +107,7 @@ function PurchasesPage() {
             setFetchError("An error occurred while updating the status. Please try again.");
         }
     };
-
+    
     let filteredChecks;
     if(filter === "all") {
         filteredChecks = checks ? (searchQuery.trim() === '' ? checks : checks.filter(check =>
@@ -99,6 +119,7 @@ function PurchasesPage() {
             check.check_number.toString().trim() === searchQuery.trim() && check.status === filter
         )) : [];
     }
+
 
 
     const handleFilter = (status) => {
@@ -136,7 +157,7 @@ function PurchasesPage() {
     }
 
     return (
-        <div>
+        <div className="entire-page">
             <MenuBar />
             <div>
                 <input
@@ -155,6 +176,8 @@ function PurchasesPage() {
                         <option value="completed">Completed</option>
                     </select>
                 )}
+
+
                 <button className="sort-checks" onClick={() => handleSort("check_number")}>
                     Sort by check number
                 </button>
@@ -166,7 +189,7 @@ function PurchasesPage() {
                             <div>
                                 <select className={check.status} value={check.status}
                                         onChange={(e) => handleStatusChange(e, check.check_number)}>
-                                    <option value="pending">Pending</option>
+                                <option value="pending">Pending</option>
                                     <option value="processing">Processing</option>
                                     <option value="completed">Completed</option>
                                 </select>
@@ -215,6 +238,10 @@ function PurchasesPage() {
                                 <div className="item">
                                     <p>Email:</p>
                                     <p>{selectedCheck.customer_email}</p>
+                                </div>
+                                <div className="item">
+                                    <p>Address:</p>
+                                    <p>{selectedCheck.city}, {selectedCheck.street}, {selectedCheck.zip_code}</p>
                                 </div>
                                 <h3 className="delimiter">
                                     *****************************************

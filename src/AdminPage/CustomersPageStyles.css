@@ -16,7 +16,7 @@
 }
 .sort-customers{
     background-color: rgba(232, 152, 38, 0.62);
-    width: 10%;
+    width: 200px;
     border: 1px solid rgba(239, 182, 99, 0.62);
     padding: 8px;
     margin: 10px;
@@ -203,4 +203,37 @@ body{
     margin: 5px 0;
     font-size: 14px;
     text-align: left;
+}
+
+
+.entire-page{
+    min-width: 460px;
+}
+
+@media (max-width: 1220px) {
+    .entire-page{
+        position: relative;
+        margin-top: 80px;
+    }
+}
+
+@media (max-width: 750px) {
+    .entire-page{
+        position: relative;
+        margin-top: 100px;
+    }
+}
+
+@media (max-width: 610px) {
+    .entire-page{
+        position: relative;
+        margin-top: 150px;
+    }
+}
+
+@media (max-width: 465px) {
+    .entire-page{
+        position: relative;
+        margin-top: 270px;
+    }
 }

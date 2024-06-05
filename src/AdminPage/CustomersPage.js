@@ -66,7 +66,7 @@ function CustomerPage() {
     };
 
     return (
-        <div>
+        <div className="entire-page">
             <MenuBar />
             <div>
                 <input

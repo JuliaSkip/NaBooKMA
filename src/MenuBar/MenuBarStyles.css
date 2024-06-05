@@ -52,15 +52,14 @@ img{
     width: 35px;
     height: 35px;
 }
+.book-icon{
+    margin-left: 20%;
+    margin-top: -5px;
+}
 
 body.basket-open > *:not(.basket-overlay) {
     filter: blur(3px);
 }
-.basket-card{
-     position: fixed;
-     top: 100px;
-     right: 0;
- }
 .basket-content {
     position: fixed;
     top: 0;
@@ -113,7 +112,7 @@ body.basket-open > *:not(.basket-overlay) {
     z-index: 1000;
 }
 
-.buy-section{
+.buy-section {
     position: fixed;
     bottom: 0;
     right: 0;
@@ -125,22 +124,9 @@ body.basket-open > *:not(.basket-overlay) {
     overflow-y: auto;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .basket-card {
+    position: relative;
+    top: 40px;
     display: flex;
     align-items: center;
     margin-bottom: 20px;
@@ -148,7 +134,6 @@ body.basket-open > *:not(.basket-overlay) {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
-
 .basket-card img {
     width: 100px;
     height: auto;
@@ -179,4 +164,3 @@ body.basket-open > *:not(.basket-overlay) {
     position: relative;
     margin-right: 5%;
 }
-

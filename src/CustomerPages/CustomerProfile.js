@@ -270,7 +270,7 @@ function CustomerProfile() {
 
 
     return (
-        <div>
+        <div className="entire-page">
             <MenuBar />
             <div className="dashboard">
                 {email !== "admin@ukma.edu.ua" ? (
@@ -409,7 +409,7 @@ function CustomerProfile() {
 
                     </>
                 ) : (
-                    <div className="main-info" style={{ marginLeft: "85%" }}>
+                    <div className="main-info-admin" style={{ marginLeft: "85%" }}>
                         <img src={profile.customer_photo_url} alt="Customer Photo" className="profile-photo" />
                         <div className="profile-info">
                             <h2>{profile.cust_name} {profile.cust_patronymic} {profile.cust_surname}</h2>

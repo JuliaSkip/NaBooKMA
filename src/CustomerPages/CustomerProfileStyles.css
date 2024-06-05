@@ -150,3 +150,51 @@ button {
 }
 
 
+.main-info-admin{
+    position: fixed;
+    top: 100px;
+    right: 20%;
+    background: rgba(248, 241, 234, 0.21);
+    border-radius: 10px;
+    padding: 53px;
+    width: 50%;
+    height: 74%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+@media (max-width: 1220px) {
+    .entire-page{
+        position: relative;
+        margin-top: 80px;
+    }
+
+    .main-info-admin{
+        top: 140px;
+    }
+}
+
+
+@media (max-width: 750px) {
+    .entire-page{
+        position: relative;
+        margin-top: 190px;
+    }
+    .main-info-admin{
+        top: 160px;
+    }
+}
+
+@media (max-width: 610px) {
+    .entire-page{
+        position: relative;
+        margin-top: 240px;
+    }
+}
+
+@media (max-width: 465px) {
+    .entire-page{
+        position: relative;
+        margin-top: 370px;
+    }
+}

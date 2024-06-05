@@ -25,6 +25,12 @@ function BooksPage() {
     const [id, setId] = useState(null);
     const [showEditPopup, setShowEditPopup] = useState(false);
 
+    const [searchAuthor, setSearchAuthor] = useState("");
+    const [searchGenre, setSearchGenre] = useState("");
+    const [searchPrice, setSearchPrice] = useState("");
+    const [searchYear, setSearchYear] = useState("");
+    const [searchRating, setSearchRating] = useState("");
+
 
 
     const [newBook, setNewBook] = useState({
@@ -121,6 +127,26 @@ function BooksPage() {
         setSearchQuery(e.target.value);
     };
 
+    const handleSearchAuthor = (e) => {
+        setSearchAuthor(e.target.value);
+    };
+
+    const handleSearchGenre = (e) => {
+        setSearchGenre(e.target.value);
+    };
+
+    const handleSearchPrice = (e) => {
+        setSearchPrice(e.target.value);
+    };
+
+    const handleSearchRating = (e) => {
+        setSearchRating(e.target.value);
+    };
+
+    const handleSearchYear = (e) => {
+        setSearchYear(e.target.value);
+    };
+
     const handleLanguageChange = (e) => {
         setLanguage(e.target.value);
     };
@@ -209,18 +235,19 @@ function BooksPage() {
 
     const filteredBooks = books.filter(book => {
         const matchesSearch = book.title.toLowerCase().startsWith(searchQuery.toLowerCase());
+        const matchesAuthor = book.author_name.toLowerCase().startsWith(searchAuthor.toLowerCase());
+        const matchesGenre = book.genre.toLowerCase().startsWith(searchGenre.toLowerCase());
+        const matchesPrice = searchPrice ? book.price <= parseFloat(searchPrice) : true;
+        const matchesYear = searchYear ? book.publication_date.startsWith(searchYear) : true;
         const matchesLanguage = language === "all" || book.language === language;
         const matchesCategory = category === "all" || book.category === category;
-        return matchesSearch && matchesLanguage && matchesCategory;
+        return matchesSearch && matchesAuthor && matchesGenre && matchesPrice && matchesYear && matchesLanguage && matchesCategory;
     });
 
-    const handleSort = (columnName) => {
-        if (sortBy === columnName) {
-            setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC");
-        } else {
-            setSortBy(columnName);
-            setSortOrder("ASC");
-        }
+    const handleSort = (e) => {
+        const [columnName, order] = e.target.value.split("-");
+        setSortBy(columnName);
+        setSortOrder(order);
     };
 
     const handlePopup = (book) => {
@@ -242,22 +269,6 @@ function BooksPage() {
         setShowEditPopup(false);
         setPopupBook(null);
     };
-    function getCurrentDate() {
-        const today = new Date();
-        const year = today.getFullYear();
-        let month = today.getMonth() + 1;
-        let day = today.getDate();
-
-        if (month < 10) {
-            month = `0${month}`;
-        }
-        if (day < 10) {
-            day = `0${day}`;
-        }
-
-        return `${year}-${month}-${day}`;
-    }
-
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -322,37 +333,73 @@ function BooksPage() {
 
 
     return (
-        <div>
+        <div className="entire-page">
             <MenuBar/>
-            <div>
-                <input
-                    type="text"
-                    placeholder="Search by title..."
-                    value={searchQuery}
-                    onChange={handleSearch}
-                    className="search-bar-books"
-                />
-                <button
-                    className="sort-books"
-                    onClick={() => handleSort("title")}
-                >
-                    Sort by title
-                </button>
+            <div className="book-actions">
+                <div className="search-container">
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={handleSearch}
+                        placeholder="Search by title..."
+                    />
+                    <input
+                        type="text"
+                        value={searchAuthor}
+                        onChange={handleSearchAuthor}
+                        placeholder="Search by author..."
+                    />
+                    <input
+                        type="text"
+                        value={searchGenre}
+                        onChange={handleSearchGenre}
+                        placeholder="Search by genre..."
+                    />
+                    <input
+                        type="number"
+                        value={searchPrice}
+                        onChange={handleSearchPrice}
+                        placeholder="Search by price..."
+                    />
+                    <input
+                        type="number"
+                        value={searchYear}
+                        onChange={handleSearchRating}
+                        placeholder="Search by rating..."
+                    />
+                    <input
+                        type="number"
+                        value={searchYear}
+                        onChange={handleSearchYear}
+                        placeholder="Search by year..."
+                    />
+                </div>
+                <select className="language-select" id="sort-books" value={`${sortBy}-${sortOrder}`}
+                        onChange={handleSort}>
+                    <option value="title-ASC">Title A-Z</option>
+                    <option value="title-DESC">Title Z-A</option>
+                    <option value="publication_date-ASC">Oldest First</option>
+                    <option value="publication_date-DESC">Newest First</option>
+                    <option value="rating-ASC">Lowest Rating</option>
+                    <option value="rating-DESC">Highest Rating</option>
+                    <option value="price-ASC">Сheap First</option>
+                    <option value="price-DESC">Expensive First</option>
+                </select>
                 <select
                     value={language}
                     onChange={handleLanguageChange}
                     className="language-select"
                 >
-                    <option value="all">All</option>
+                    <option value="all">All languages</option>
                     <option value="Українська">Українська</option>
                     <option value="English">English</option>
                 </select>
-            </div>
-            {id === "0" && (  <div style={{ marginTop: "20px" }}>
+            {id === "0" && (<div style={{marginTop: "20px"}}>
                 <button className="add-book-button" onClick={() => setShowAddForm(!showAddForm)}>
                     Add Book
                 </button>
             </div>)}
+            </div>
 
 
             {showAddForm && (

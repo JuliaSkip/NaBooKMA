@@ -16,7 +16,7 @@
 }
 .sort-checks{
     background-color: rgba(232, 152, 38, 0.62);
-    width: 12%;
+    width: 200px;
     border: 1px solid rgba(232, 152, 38, 0.62);
     padding: 8px;
     margin: 10px;
@@ -234,57 +234,30 @@
 }
 
 
-
-
-@media only screen and (max-width: 600px) {
-    .search-bar-checks {
-        top: 250px;
-    }
-
-    .sort-checks {
-        top: 250px;
-    }
-
-    .check.page {
-        margin-top: 250px;
-    }
-    .receipt{
-        margin-top:250px;
+@media (max-width: 1220px) {
+    .entire-page{
+        position: relative;
+        margin-top: 80px;
     }
 }
 
-
-@media only screen and (min-width: 601px) and (max-width: 768px) {
-    .search-bar-checks {
-        top: 190px;
-    }
-
-    .sort-checks {
-        top: 190px;
-    }
-
-    .check.page {
-        margin-top: 150px;
-    }
-    .receipt{
-        margin-top:150px;
+@media (max-width: 750px) {
+    .entire-page{
+        position: relative;
+        margin-top: 100px;
     }
 }
 
-
-@media only screen and (min-width: 769px) {
-    .search-bar-checks {
-        top: 150px;
-    }
-
-    .sort-checks {
-        top: 150px;
-    }
-
-    .check.page {
+@media (max-width: 610px) {
+    .entire-page{
+        position: relative;
         margin-top: 150px;
     }
-    .receipt{
-        margin-top:200px;
+}
+
+@media (max-width: 465px) {
+    .entire-page{
+        position: relative;
+        margin-top: 270px;
     }
 }
