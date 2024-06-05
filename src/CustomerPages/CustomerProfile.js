@@ -19,6 +19,8 @@ function CustomerProfile() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [photo, setPhoto] = useState(null);
+    const [basket, setBasket] = useState([]);
+
     const [updatedProfile, setUpdatedProfile] = useState({
         cust_name: '',
         cust_patronymic: '',
@@ -73,6 +75,24 @@ function CustomerProfile() {
             setPurchases([]);
         }
     };
+
+    const fetchBasket = async (email) => {
+        try {
+            const response = await fetch(
+                `http://localhost:8081/get-basket?customer_email=${email}`
+            );
+            if (!response.ok) {
+                throw new Error("Could not fetch basket");
+            }
+            const data = await response.json();
+            setBasket(data);
+        } catch (error) {
+            setBasket([]);
+        }
+    };
+    useEffect(() => {
+        fetchBasket(email);
+    }, [basket]);
 
     const getPurchaseInfo = (purchase) => {
         if (!purchase) return "";
@@ -134,6 +154,7 @@ function CustomerProfile() {
                 throw new Error('Could not delete check');
             }
             fetchOrders(email);
+            setCurrentCheckIndex(currentCheckIndex-1)
         } catch (error) {
             console.error(error.message);
         }
@@ -271,7 +292,7 @@ function CustomerProfile() {
 
     return (
         <div className="entire-page">
-            <MenuBar />
+            <MenuBar length_b={basket.length}/>
             <div className="dashboard">
                 {email !== "admin@ukma.edu.ua" ? (
                     <>

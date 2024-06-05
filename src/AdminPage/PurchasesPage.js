@@ -145,14 +145,17 @@ function PurchasesPage() {
     };
 
     const handleDelete = async (checkNumber) =>{
-        try {
-            const response = await fetch(`http://localhost:8081/delete-check/${checkNumber}`, { method: 'DELETE' });
-            if (!response.ok) {
-                throw new Error('Could not delete check');
+        const confirmed = window.confirm("Are you sure you want to delete this check?");
+        if (confirmed) {
+            try {
+                const response = await fetch(`http://localhost:8081/delete-check/${checkNumber}`, {method: 'DELETE'});
+                if (!response.ok) {
+                    throw new Error('Could not delete check');
+                }
+                fetchChecks();
+            } catch (error) {
+                console.error(error.message);
             }
-            fetchChecks();
-        } catch (error) {
-            console.error(error.message);
         }
     }
 

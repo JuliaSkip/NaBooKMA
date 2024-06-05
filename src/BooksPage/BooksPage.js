@@ -26,7 +26,6 @@ function BooksPage() {
     const [email, setEmail] = useState(null);
     const [showEditPopup, setShowEditPopup] = useState(false);
 
-
     const [searchAuthor, setSearchAuthor] = useState("");
     const [searchGenre, setSearchGenre] = useState("");
     const [searchPrice, setSearchPrice] = useState("");
@@ -34,8 +33,6 @@ function BooksPage() {
     const [searchRating, setSearchRating] = useState("");
 
     const [basket, setBasket] = useState([]);
-
-
 
     const [newBook, setNewBook] = useState({
         id_book: "",
@@ -141,6 +138,10 @@ function BooksPage() {
         fetchBooks();
     }, [sortBy, sortOrder, language, category]);
 
+    useEffect(() => {
+        fetchBasket(email);
+    }, [basket]);
+
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
     };
@@ -235,17 +236,20 @@ function BooksPage() {
     };
 
     const handleDeleteBook = async (bookId) => {
-        try {
-            const response = await fetch(`http://localhost:8081/delete-book/${bookId}`, {
-                method: "DELETE"
-            });
-            if (!response.ok) {
-                throw new Error("Could not delete book");
+        const confirmed = window.confirm("Are you sure you want to delete this book?");
+        if (confirmed) {
+            try {
+                const response = await fetch(`http://localhost:8081/delete-book/${bookId}`, {
+                    method: "DELETE"
+                });
+                if (!response.ok) {
+                    throw new Error("Could not delete book");
+                }
+                fetchBooks();
+                setShowPopup(false);
+            } catch (error) {
+                console.error("Error deleting book:", error.message);
             }
-            fetchBooks();
-            setShowPopup(false);
-        } catch (error) {
-            console.error("Error deleting book:", error.message);
         }
     };
 
@@ -334,6 +338,8 @@ function BooksPage() {
     }
 
     const handleAddToBasket = async (e, book) => {
+        const confirmed = window.confirm("Are you sure you want to add this book to basket?");
+        if (confirmed) {
         e.stopPropagation();
         try {
             const response = await fetch("http://localhost:8081/add-book-to-basket", {
@@ -353,6 +359,8 @@ function BooksPage() {
         } catch (error) {
             console.error("Error adding book:", error.message);
         }
+        }
+
     };
 
 
