@@ -13,6 +13,8 @@ function PurchasesPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [filter, setFilter] = useState("all");
     const [allCustomers, setAllCustomers] = useState([]);
+    const [month, setMonth] = useState("");
+    const [year, setYear] = useState("");
 
 
     /**
@@ -164,19 +166,20 @@ function PurchasesPage() {
         }
     };
 
-     //Filters the check list based on the search query and selected filter status.
-    let filteredChecks;
-    if(filter === "all") {
-        filteredChecks = checks ? (searchQuery.trim() === '' ? checks : checks.filter(check =>
-            check.check_number.toString().trim() === searchQuery.trim()
-        )) : [];
-    }else{
-        filteredChecks = checks ? (searchQuery.trim() === '' ? checks.filter(check =>
-            check.status === filter) : checks.filter(check =>
-            check.check_number.toString().trim() === searchQuery.trim() && check.status === filter
-        )) : [];
-    }
 
+    const uniqueMonths = [...new Set(checks.map(check => new Date(check.print_date).getMonth() + 1))];
+    const uniqueYears = [...new Set(checks.map(check => new Date(check.print_date).getFullYear()))];
+
+    //Filters the check list based on the search query and selected filter status.
+    let filteredChecks = checks ? checks.filter(check => {
+        const checkDate = new Date(check.print_date);
+        const matchesMonth = month ? checkDate.getMonth() + 1 === parseInt(month) : true;
+        const matchesYear = year ? checkDate.getFullYear() === parseInt(year) : true;
+        const matchesSearch = searchQuery.trim() === '' ? true : check.check_number.toString().trim() === searchQuery.trim();
+        const matchesFilter = filter === "all" ? true : check.status === filter;
+
+        return matchesMonth && matchesYear && matchesSearch && matchesFilter;
+    }) : [];
 
     /**
      * Handles the filter change by updating the filter state.
@@ -186,6 +189,13 @@ function PurchasesPage() {
         setFilter(status);
     };
 
+    const handleMonthChange = (e) => {
+        setMonth(e.target.value);
+    };
+
+    const handleYearChange = (e) => {
+        setYear(e.target.value);
+    };
 
     /**
      * Formats a date string into a human-readable format.
@@ -235,9 +245,11 @@ function PurchasesPage() {
         }
     }
 
+    const totalSum = filteredChecks.reduce((sum, check) => parseFloat(sum) + parseFloat(check.total_price), 0);
+
     return (
         <div className="entire-page">
-            <MenuBar />
+            <MenuBar/>
             <div>
                 <input
                     type="text"
@@ -246,29 +258,45 @@ function PurchasesPage() {
                     onChange={handleSearch}
                     className="search-bar-checks"
                 />
-                {searchQuery === "" && (
-                    <select className="sort-checks" value={filter}
-                            onChange={(e) => handleFilter(e.target.value)}>
-                        <option value="all">All</option>
-                        <option value="pending">Pending</option>
-                        <option value="processing">Processing</option>
-                        <option value="completed">Completed</option>
-                    </select>
-                )}
-
-
-                <button className="sort-checks" onClick={() => handleSort("check_number")}>
-                    Sort by check number
-                </button>
             </div>
+            <button className="sort-checks" onClick={() => handleSort("check_number")}>
+                Sort by check number
+            </button>
+
+            {searchQuery === "" && (
+                <select className="sort-checks" value={filter}
+                        onChange={(e) => handleFilter(e.target.value)}>
+                    <option value="all">All statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="completed">Completed</option>
+                </select>
+            )}
+
+            <select className="sort-checks" value={month} onChange={handleMonthChange}>
+                <option value="">All months</option>
+                {uniqueMonths.map((month) => (
+                    <option key={month}
+                            value={month}>{new Date(0, month - 1).toLocaleString('en', {month: 'long'})}</option>
+                ))}
+            </select>
+
+            <select className="sort-checks" value={year} onChange={handleYearChange}>
+                <option value="">All years</option>
+                {uniqueYears.map((year) => (
+                    <option key={year} value={year}>{year}</option>
+                ))}
+            </select>
+
             <div className="check page">
+                <h3>Total sum: {totalSum} $</h3>
                 <div className="check-cards">
                     {filteredChecks.map((check) => (
                         <div>
                             <div>
                                 <select className={check.status} value={check.status}
                                         onChange={(e) => handleStatusChange(e, check.check_number)}>
-                                <option value="pending">Pending</option>
+                                    <option value="pending">Pending</option>
                                     <option value="processing">Processing</option>
                                     <option value="completed">Completed</option>
                                 </select>
@@ -278,8 +306,9 @@ function PurchasesPage() {
                                 <p className="print-date">{formatDate(check.print_date)}</p>
                                 <p className="total-price">{check.total_price} $</p>
                                 <button className="open-check" onClick={() => handleOpenPopup(check)}>⇲</button>
-                                <button className="delete-check" onClick={() => handleDelete(check.check_number)}>⛌</button>
-                        </div>
+                                <button className="delete-check" onClick={() => handleDelete(check.check_number)}>⛌
+                                </button>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -368,7 +397,7 @@ function PurchasesPage() {
                 )}
                 {filteredChecks.length === 0 && (
                     <div className="error-message">
-                    <h2>No checks found.</h2>
+                        <h2>No checks found.</h2>
                     </div>
                 )}
                 {filteredChecks.length !== 0 && (
