@@ -15,7 +15,13 @@ function PurchasesPage() {
     const [allCustomers, setAllCustomers] = useState([]);
 
 
-
+    /**
+     * Fetches check data from the specified endpoint and updates the state with the fetched data.
+     * The function sends a GET request to `http://localhost:8081/get-checks` with query parameters
+     * for sorting the data (`sortBy` and `sortOrder`). Upon a successful response, it parses the
+     * JSON data and updates the state with the check data. If the request fails, it sets an error
+     * message and clears the check data.
+     */
     const fetchChecks = async () => {
         try {
             const response = await fetch(
@@ -33,6 +39,14 @@ function PurchasesPage() {
         }
     };
 
+
+    /**
+     * Fetches customer data from the specified endpoint and updates the state with the fetched data.
+     * The function sends a GET request to `http://localhost:8081/get-customers` with predefined query
+     * parameters for sorting the data (`cust_surname` and `ASC`). Upon a successful response, it parses
+     * the JSON data and updates the state with the customer data. If the request fails, it sets an error
+     * message and clears the customer data.
+     */
     const fetchCustomers = async () => {
         try {
             const response = await fetch(
@@ -50,6 +64,13 @@ function PurchasesPage() {
         }
     };
 
+
+    /**
+     * Fetches purchase data for a specific check from the specified endpoint and updates the state with the fetched data.
+     * The function sends a GET request to `http://localhost:8081/get-purchases` with the check number as a query parameter.
+     * Upon a successful response, it parses the JSON data and updates the state with the purchase data. If the request fails,
+     * it sets an error message and clears the purchase data.
+     */
     const fetchPurchases = async (check_num) => {
         try {
             const response = await fetch(
@@ -67,11 +88,23 @@ function PurchasesPage() {
         }
     };
 
+    /**
+     * useEffect hook to fetch checks and customers whenever the sorting parameters change.
+     * This hook calls the `fetchChecks` and `fetchCustomers` functions whenever the values of `sortBy` or `sortOrder` change.
+     * It ensures that the check and customer data are always fetched and updated based on the current sorting preferences.
+     */
     useEffect(() => {
         fetchChecks();
         fetchCustomers()
     }, [sortBy, sortOrder]);
 
+
+    /**
+     * Handles the sorting of checks based on the selected column.
+     * This function updates the sorting state (`sortBy` and `sortOrder`) when a column header is clicked.
+     * If the column is already the one being sorted, it toggles the sort order. Otherwise, it sets
+     * the sort column to the selected column and the sort order to ascending.
+     */
     const handleSort = (columnName) => {
         if (sortBy === columnName) {
             setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC");
@@ -81,22 +114,45 @@ function PurchasesPage() {
         }
     };
 
+
+    /**
+     * Handles the search input change by updating the search query state.
+     * This function is triggered on each keystroke in the search input field. It updates the
+     * `searchQuery` state with the current value of the input field.
+     */
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
     };
 
+
+    /**
+     * Opens a popup with the details of the selected check.
+     * This function sets the `selectedCheck` state to the selected check, fetches its purchases,
+     * and shows the popup by setting `showPopup` to true.
+     */
     const handleOpenPopup = (check) => {
         setSelectedCheck(check);
         fetchPurchases(check.check_number);
         setShowPopup(true);
     };
 
+
+    /**
+     * Closes the popup and clears the selected check and purchases details.
+     * This function hides the popup by setting `showPopup` to false and clears the `selectedCheck` and `purchases` state.
+     */
     const handleClosePopup = () => {
         setSelectedCheck(null);
         setPurchases(null);
         setShowPopup(false);
     };
 
+
+    /**
+     * Handles the status change of a check.
+     * This function sends a PUT request to update the status of a check. If the request is successful,
+     * it fetches the updated checks. If the request fails, it sets an error message.
+     */
     const handleStatusChange = async (status, check_num) => {
         try {
             const response = await fetch(`http://localhost:8081/update-status?check_number=${check_num}&status=${status.target.value}`, {
@@ -107,7 +163,8 @@ function PurchasesPage() {
             setFetchError("An error occurred while updating the status. Please try again.");
         }
     };
-    
+
+     //Filters the check list based on the search query and selected filter status.
     let filteredChecks;
     if(filter === "all") {
         filteredChecks = checks ? (searchQuery.trim() === '' ? checks : checks.filter(check =>
@@ -121,11 +178,19 @@ function PurchasesPage() {
     }
 
 
-
+    /**
+     * Handles the filter change by updating the filter state.
+     * This function updates the `filter` state with the selected filter status.
+     */
     const handleFilter = (status) => {
         setFilter(status);
     };
 
+
+    /**
+     * Formats a date string into a human-readable format.
+     * This function takes a date string and returns it formatted as "DD/MM/YYYY, HH:MM:SS".
+     */
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return new Intl.DateTimeFormat("en-GB", {
@@ -138,12 +203,23 @@ function PurchasesPage() {
         }).format(date);
     };
 
+
+    /**
+     * Gets the detailed information of a purchase as a formatted string.
+     * This function takes a purchase object and returns a formatted string containing the purchase details.
+     */
     const getPurchaseInfo = (purchase) => {
         if (!purchase) return "";
         const info = `Title: ${purchase.title}\nAuthor: ${purchase.author_name}\nPublisher: ${purchase.publisher_name}\nGenre: ${purchase.genre}\nCategory: ${purchase.category}\nPublication Date: ${formatDate(purchase.publication_date)}\nPrice at the moment: ${purchase.price} ₴\nPages: ${purchase.pages}\nLanguage: ${purchase.language}\nSummary: ${purchase.summary}\nRating: ${purchase.rating}`;
         return info;
     };
 
+
+    /**
+     * Handles the deletion of a check.
+     * This function sends a DELETE request to delete a specific check. If the request is successful,
+     * it fetches the updated checks. If the request fails, it logs an error message.
+     */
     const handleDelete = async (checkNumber) =>{
         const confirmed = window.confirm("Are you sure you want to delete this check?");
         if (confirmed) {

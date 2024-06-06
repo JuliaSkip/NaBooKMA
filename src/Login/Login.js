@@ -10,12 +10,21 @@ function Login() {
     const [password, setPassword] = useState('');
     const [DbPassword, setDbPassword] = useState(null);
 
+    /**
+     * useEffect hook to fetch user data when the email changes.
+     */
     useEffect(() => {
         if (email) {
             fetchUser();
         }
     }, [email]);
 
+    /**
+     * Fetches user data from the server based on the provided email.
+     * This function sends a GET request to `http://localhost:8081/get-customer-by-email` with the email
+     * as a query parameter. Upon a successful response, it extracts the user data and updates the state
+     * with the user's password. It also stores the user's email and ID in the local storage.
+     */
     const fetchUser = async () => {
         try {
             const response = await fetch(`http://localhost:8081/get-customer-by-email?email=${email}`);
@@ -36,6 +45,13 @@ function Login() {
         }
     };
 
+
+    /**
+     * Handles form submission by validating user input and navigating to the specified route.
+     * This function is triggered on form submission. It checks if the email is provided and compares
+     * the entered password with the stored password. If the credentials match, it navigates to the
+     * '/nabookma' route; otherwise, it sets an error message.
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {

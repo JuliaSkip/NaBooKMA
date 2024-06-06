@@ -29,6 +29,10 @@ const Signup = () => {
 
     const supabase = createClient('https://upkigeauanwefsngyhqb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwa2lnZWF1YW53ZWZzbmd5aHFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYyMjQxOTQsImV4cCI6MjAzMTgwMDE5NH0.s60GCwAeFC5zdmGKiJ0oxm7WXf2gcsCUWkUhEguUlvM');
 
+    /**
+     * Fetches initial customers data when the component mounts.
+     * This function sends a GET request to fetch initial customers data and sets it in the state.
+     */
     const fetchCustomers = async () => {
         try {
             const response = await fetch(
@@ -45,9 +49,12 @@ const Signup = () => {
             setCustomers([]);
         }
     };
+
+    // Effect hook to fetch initial customers data when the component mounts
     useEffect(() => {
         fetchCustomers();
     }, []);
+
 
     const validateEmail = (e) => {
         if (e && customers.find(customer => customer.customer_email === e)) {
@@ -115,6 +122,11 @@ const Signup = () => {
         }
     }
 
+
+    /**
+     * Handles form submission for customer registration.
+     * This function validates form inputs, uploads photo if provided, and submits the form data.
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         validatePhone(phone)
@@ -186,7 +198,6 @@ const Signup = () => {
             window.alert(error);
         }
     };
-
 
     const handleCancel = () => {
         navigate('/')

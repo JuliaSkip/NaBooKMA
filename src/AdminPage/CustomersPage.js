@@ -11,6 +11,14 @@ function CustomerPage() {
     const [sortBy, setSortBy] = useState("cust_surname");
     const [sortOrder, setSortOrder] = useState("ASC");
 
+
+    /**
+     * Fetches customer data from the specified endpoint and updates the state with the fetched data.
+     * The function sends a GET request to `http://localhost:8081/get-customers` with query parameters
+     * for sorting the data (`sortBy` and `sortOrder`). Upon a successful response, it parses the
+     * JSON data and updates the state with the customer data. If the request fails, it sets an error
+     * message and clears the customer data.
+     */
     const fetchCustomers = async () => {
         try {
             const response = await fetch(
@@ -28,19 +36,44 @@ function CustomerPage() {
         }
     };
 
+
+    /**
+     * useEffect hook to fetch customer data whenever the sorting parameters change.
+     * This hook calls the `fetchCustomers` function whenever the values of `sortBy` or `sortOrder` change.
+     * It ensures that the customer data is always fetched and updated based on the current sorting preferences.
+     */
     useEffect(() => {
         fetchCustomers();
     }, [sortBy, sortOrder]);
 
+
+    /**
+     * Handles the search input change by updating the search query state.
+     * This function is triggered on each keystroke in the search input field. It updates the
+     * `searchQuery` state with the current value of the input field.
+     */
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
     };
 
+
+    /**
+     * Filters the customer list based on the search query and excludes "admin" from the results.
+     * This constant filters the `customers` array to include only those whose `cust_surname`
+     * starts with the `searchQuery` and is not "admin".
+     */
     const filteredCustomers = customers.filter(customer =>
         customer.cust_surname.toLowerCase().startsWith(searchQuery.toLowerCase()) &&
         customer.cust_surname.toLowerCase() !== "admin"
     );
 
+
+    /**
+     * Handles the sorting of customers based on the selected column.
+     * This function updates the sorting state (`sortBy` and `sortOrder`) when a column header is clicked.
+     * If the column is already the one being sorted, it toggles the sort order. Otherwise, it sets
+     * the sort column to the selected column and the sort order to ascending.
+     */
     const handleSort = (columnName) => {
         if (sortBy === columnName) {
             setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC");
@@ -50,20 +83,37 @@ function CustomerPage() {
         }
     };
 
+
+    /**
+     * Opens a popup with the details of the selected customer.
+     * This function sets the `popupCustomer` state to the selected customer and shows the popup
+     * by setting `showPopup` to true.
+     */
     const handlePopup = (customer) => {
         setPopupCustomer(customer);
         setShowPopup(true);
     };
 
+
+    /**
+     * Closes the popup and clears the selected customer details.
+     * This function hides the popup by setting `showPopup` to false and clears the `popupCustomer` state.
+     */
     const handleClosePopup = () => {
         setShowPopup(false);
         setPopupCustomer(null);
     };
 
+
+    /**
+     * Formats a date string into a human-readable format.
+     * This function takes a date string and returns it formatted as "Month Day, Year".
+     */
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString("en-US", options);
     };
+
 
     return (
         <div className="entire-page">

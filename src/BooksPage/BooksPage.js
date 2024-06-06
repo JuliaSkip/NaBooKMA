@@ -51,6 +51,14 @@ function BooksPage() {
 
     const supabase = createClient('https://upkigeauanwefsngyhqb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwa2lnZWF1YW53ZWZzbmd5aHFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYyMjQxOTQsImV4cCI6MjAzMTgwMDE5NH0.s60GCwAeFC5zdmGKiJ0oxm7WXf2gcsCUWkUhEguUlvM');
 
+
+    /**
+     * Fetches book data from the specified endpoint and updates the state with the fetched data.
+     * The function sends a GET request to `http://localhost:8081/get-books` with query parameters
+     * for sorting the data (`sortBy` and `sortOrder`), language, and category. Upon a successful
+     * response, it parses the JSON data and updates the state with the book data. If the request fails,
+     * it sets an error message and clears the book data.
+     */
     const fetchBooks = async () => {
         try {
             const response = await fetch(
@@ -68,11 +76,23 @@ function BooksPage() {
         }
     };
 
+    /**
+     * Handles changes to the book edit form by updating the state with the new values.
+     * This function is triggered on each change in the edit form fields. It updates the `popupBook`
+     * state with the current value of the changed input field.
+     */
     const handleEditBookChange = (e) => {
         const { name, value } = e.target;
         setPopupBook((prevBook) => ({ ...prevBook, [name]: value }));
     };
 
+
+    /**
+     * Fetches the basket data for a specific customer from the specified endpoint and updates the state with the fetched data.
+     * The function sends a GET request to `http://localhost:8081/get-basket` with the customer's email as a query parameter.
+     * Upon a successful response, it parses the JSON data and updates the state with the basket data. If the request fails,
+     * it sets the basket state to an empty array.
+     */
     const fetchBasket = async (email) => {
         try {
             const response = await fetch(
@@ -88,6 +108,12 @@ function BooksPage() {
         }
     };
 
+    /**
+     * Handles the submission of the book edit form.
+     * This function is triggered on form submission. It uploads the book photo to Supabase storage
+     * if a new photo is provided. Then it sends a PUT request to update the book details. If the
+     * request is successful, it closes the edit popup and fetches the updated books.
+     */
     const handleEditBookSubmit = async (e) => {
         e.preventDefault();
         let photoUrl = "https://upkigeauanwefsngyhqb.supabase.co/storage/v1/object/public/photos/default-book-icon.png"
@@ -133,49 +159,105 @@ function BooksPage() {
         }
     };
 
-
+    /**
+     * useEffect hook to fetch books whenever the sorting parameters, language, or category change.
+     * This hook calls the `fetchBooks` function whenever the values of `sortBy`, `sortOrder`, `language`,
+     * or `category` change. It ensures that the book data is always fetched and updated based on the current
+     * sorting preferences, language, and category.
+     */
     useEffect(() => {
         fetchBooks();
     }, [sortBy, sortOrder, language, category]);
 
+    /**
+     * useEffect hook to fetch the basket data whenever the `basket` state changes.
+     * This hook calls the `fetchBasket` function whenever the `basket` state changes. It ensures that
+     * the basket data is always fetched and updated based on the current state.
+     */
     useEffect(() => {
         fetchBasket(email);
     }, [basket]);
 
+    /**
+     * Handles the search input change by updating the search query state.
+     * This function is triggered on each keystroke in the search input field. It updates the
+     * `searchQuery` state with the current value of the input field.
+     */
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
     };
 
+    /**
+     * Handles the author search input change by updating the search author state.
+     * This function is triggered on each keystroke in the author search input field. It updates the
+     * `searchAuthor` state with the current value of the input field.
+     */
     const handleSearchAuthor = (e) => {
         setSearchAuthor(e.target.value);
     };
 
+    /**
+     * Handles the genre search input change by updating the search genre state.
+     * This function is triggered on each keystroke in the genre search input field. It updates the
+     * `searchGenre` state with the current value of the input field.
+     */
     const handleSearchGenre = (e) => {
         setSearchGenre(e.target.value);
     };
 
+    /**
+     * Handles the rating search input change by updating the search rating state.
+     * This function is triggered on each keystroke in the rating search input field. It updates the
+     * `searchRating` state with the current value of the input field.
+     */
     const handleSearchRating = (e) => {
         setSearchRating(e.target.value);
     };
 
+    /**
+     * Handles the year search input change by updating the search year state.
+     * This function is triggered on each keystroke in the year search input field. It updates the
+     * `searchYear` state with the current value of the input field.
+     */
     const handleSearchYear = (e) => {
         setSearchYear(e.target.value);
     };
 
-
+    /**
+     * Handles the language selection change by updating the language state.
+     * This function is triggered when the language selection changes. It updates the `language` state
+     * with the selected language.
+     */
     const handleLanguageChange = (e) => {
         setLanguage(e.target.value);
     };
 
+    /**
+     * Handles the category selection change by updating the category state.
+     * This function is triggered when the category selection changes. It updates the `category` state
+     * with the selected category.
+     */
     const handleCategoryChange = (selectedCategory) => {
         setCategory(selectedCategory);
     };
 
+    /**
+     * Handles changes to the add book form by updating the state with the new values.
+     * This function is triggered on each change in the add book form fields. It updates the `newBook`
+     * state with the current value of the changed input field.
+     */
     const handleAddBookChange = (e) => {
         const { name, value } = e.target;
         setNewBook((prevBook) => ({ ...prevBook, [name]: value }));
     };
 
+
+    /**
+     * Handles the submission of the add book form.
+     * This function is triggered on form submission. It uploads the book photo to Supabase storage
+     * if a new photo is provided. Then it sends a POST request to add the new book. If the
+     * request is successful, it resets the form and fetches the updated books.
+     */
     const handleAddBookSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -235,6 +317,12 @@ function BooksPage() {
         }
     };
 
+
+    /**
+     * Handles the deletion of a book.
+     * This function is triggered when a book is to be deleted. It sends a DELETE request to remove
+     * the book. If the request is successful, it fetches the updated books and closes any open popups.
+     */
     const handleDeleteBook = async (bookId) => {
         const confirmed = window.confirm("Are you sure you want to delete this book?");
         if (confirmed) {
@@ -253,6 +341,11 @@ function BooksPage() {
         }
     };
 
+    /**
+     * Filters the books based on various search criteria.
+     * This function filters the books based on title, author, genre, price, rating, publication year,
+     * language, and category. It returns the filtered list of books.
+     */
     const filteredBooks = books.filter(book => {
         const matchesSearch = book.title.toLowerCase().startsWith(searchQuery.toLowerCase());
         const matchesAuthor = book.author_name.toLowerCase().startsWith(searchAuthor.toLowerCase());
@@ -266,18 +359,35 @@ function BooksPage() {
             && matchesLanguage && matchesCategory && matchesRating;
     });
 
+
+    /**
+     * Handles sorting the books.
+     * This function is triggered when the sorting option is changed. It updates the sorting column
+     * and order based on the selected value.
+     */
     const handleSort = (e) => {
         const [columnName, order] = e.target.value.split("-");
         setSortBy(columnName);
         setSortOrder(order);
     };
 
+    /**
+     * Handles opening the popup for a book.
+     * This function is triggered when a book is clicked. It sets the selected book in the state and
+     * opens the popup to display the book details.
+     */
     const handlePopup = (book) => {
         setPopupBook(book);
         setShowPopup(true);
         setShowEditPopup(false);
     };
 
+
+    /**
+     * Handles opening the edit popup for a book.
+     * This function is triggered when the edit button is clicked. It sets the selected book in the state
+     * and opens the edit popup to modify the book details.
+     */
     const handleEditPopup = (e, book) => {
         e.stopPropagation();
         setPopupBook(book);
@@ -286,17 +396,33 @@ function BooksPage() {
 
     };
 
+
+    /**
+     * Closes the book detail or edit popup.
+     * This function is triggered when the close button is clicked. It closes the currently open popup.
+     */
     const handleClosePopup = () => {
         setShowPopup(false);
         setShowEditPopup(false);
         setPopupBook(null);
     };
 
+
+    /**
+     * Formats a date string into a human-readable format.
+     * This function formats a date string into a more readable format using the `en-US` locale.
+     */
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString("en-US", options);
     };
 
+
+    /**
+     * Renders star icons based on the rating.
+     * This function generates star icons for a given rating. Filled stars are rendered for the rating value,
+     * and empty stars for the remaining count up to 5.
+     */
     const renderStars = (rating) => {
         const stars = [];
         for (let i = 0; i < 5; i++) {
@@ -309,6 +435,10 @@ function BooksPage() {
         return stars;
     };
 
+    /**
+     * useEffect hook to fetch the basket data and user details from local storage on initial render.
+     * This hook retrieves the user's ID and email from local storage and fetches the basket data if an email is found.
+     */
     useEffect(() => {
         const storedId = localStorage.getItem('id');
         if (storedId) {
@@ -321,6 +451,11 @@ function BooksPage() {
         }
     }, []);
 
+
+    /**
+     * Gets the current date in YYYY-MM-DD format.
+     * This function generates a string representing the current date in the format YYYY-MM-DD.
+     */
     function getCurrentDate() {
         const today = new Date();
         const year = today.getFullYear();
@@ -337,6 +472,12 @@ function BooksPage() {
         return `${year}-${month}-${day}`;
     }
 
+
+    /**
+     * Handles adding a book to the basket.
+     * This function is triggered when the add to basket button is clicked. It sends a POST request to add
+     * the selected book to the basket. If the request is successful, it fetches the updated basket data.
+     */
     const handleAddToBasket = async (e, book) => {
         const confirmed = window.confirm("Are you sure you want to add this book to basket?");
         if (confirmed) {

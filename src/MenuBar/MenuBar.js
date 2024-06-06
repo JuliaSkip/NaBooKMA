@@ -11,8 +11,10 @@ const MenuBar = ({length_b}) => {
     const [email, setEmail] = useState(null);
 
 
-
-
+    /**
+     * Fetches the basket items for the given customer email.
+     * This function sends a GET request to fetch the basket items associated with the provided email.
+     */
     const fetchBasket = async (email) => {
         try {
             const response = await fetch(
@@ -28,6 +30,11 @@ const MenuBar = ({length_b}) => {
         }
     };
 
+
+    /**
+     * Handles adding a book to the basket.
+     * This function sends a POST request to add the given book to the basket.
+     */
     const handleAddToBasket = async (book) => {
             try {
                 const response = await fetch("http://localhost:8081/add-book-to-basket", {
@@ -49,6 +56,8 @@ const MenuBar = ({length_b}) => {
             }
     };
 
+
+    // Similar functions handleDecrement, handleDelete, and handleOrder for modifying and managing the basket
     const handleDecrement = async (book) => {
         try {
             const response = await fetch("http://localhost:8081/decrement-book-in-basket", {
@@ -70,8 +79,8 @@ const MenuBar = ({length_b}) => {
         }
     };
 
-    const handleDelete = async (bookId) => {
-        const confirmed = window.confirm("Delete this item from your basket?");
+    const handleDelete = async (bookId, bookTitle) => {
+        const confirmed = window.confirm("Remove \""+ bookTitle+"\" from your basket?");
         if (confirmed) {
             try {
                 const response = await fetch(`http://localhost:8081/delete-book-from-basket/${bookId}`, {
@@ -87,6 +96,7 @@ const MenuBar = ({length_b}) => {
         }
     };
 
+    // Effect hook to fetch basket data when the component mounts or when basket state changes
     useEffect(() => {
         const storedEmail = localStorage.getItem('email');
         if (storedEmail) {
@@ -99,6 +109,11 @@ const MenuBar = ({length_b}) => {
         }
     }, [basket]);
 
+
+    /**
+     * Handles toggling the visibility of the basket popup.
+     * This function toggles the visibility of the basket popup and fetches basket data if it's being shown.
+     */
     const handleBasket = () => {
         if (showPopup) {
             setShowPopup(false);
@@ -108,6 +123,11 @@ const MenuBar = ({length_b}) => {
         }
     };
 
+
+    /**
+     * Handles placing an order for the items in the basket.
+     * This function creates a check, adds purchases for each item in the basket, and clears the basket.
+     */
     const handleOrder = async () => {
         const confirmed = window.confirm("Are you sure you want to make an order?");
         if (confirmed) {
@@ -150,7 +170,7 @@ const MenuBar = ({length_b}) => {
                         throw new Error("Could not add purchase");
                     }
 
-                    handleDelete(book.id);
+                    handleDelete(book.id, book.title);
                 }
 
                 setBasket([]);
@@ -164,6 +184,10 @@ const MenuBar = ({length_b}) => {
         }
     };
 
+
+    /**
+     * Calculates the total sum of the items in the basket.
+     */
     const calculateTotalSum = (basket) => {
         return basket.reduce((total, item) => total + (item.price * item.amount), 0);
     };
@@ -186,7 +210,7 @@ const MenuBar = ({length_b}) => {
                                     <p>Quantity: {book.amount}</p>
                                     <button className="basket-actions" onClick={() => handleAddToBasket(book)}>+</button>
                                     <button className="basket-actions" onClick={() => handleDecrement(book)}>-</button>
-                                    <button className="basket-actions" onClick={() => handleDelete(book.id)}>delete</button>
+                                    <button className="basket-actions" onClick={() => handleDelete(book.id, book.title)}>delete</button>
                                 </div>
                             </div>
                         ))}

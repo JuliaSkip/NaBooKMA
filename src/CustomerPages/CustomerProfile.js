@@ -31,6 +31,9 @@ function CustomerProfile() {
         zip_code: ''
     });
 
+    /**
+     * Fetches customer data from the specified endpoint and updates the state with the fetched data.
+     */
     const fetchCustomer = async (cust) => {
         try {
             const response = await fetch(
@@ -46,6 +49,9 @@ function CustomerProfile() {
         }
     };
 
+    /**
+     * Fetches orders data for the specified customer from the specified endpoint and updates the state with the fetched data.
+     */
     const fetchOrders = async (cust) => {
         try {
             const response = await fetch(
@@ -61,6 +67,10 @@ function CustomerProfile() {
         }
     };
 
+
+    /**
+     * Fetches purchases data based on the current check number and updates the state with the fetched data.
+     */
     const fetchPurchases = async () => {
         try {
             const response = await fetch(
@@ -76,6 +86,12 @@ function CustomerProfile() {
         }
     };
 
+
+    /**
+     * Fetches basket data for the specified customer's email and updates the state with the fetched data.
+     *
+     * @param {string} email - The customer's email to fetch the basket for.
+     */
     const fetchBasket = async (email) => {
         try {
             const response = await fetch(
@@ -90,10 +106,12 @@ function CustomerProfile() {
             setBasket([]);
         }
     };
+
     useEffect(() => {
         fetchBasket(email);
     }, [basket]);
 
+    //method to get structured info about book
     const getPurchaseInfo = (purchase) => {
         if (!purchase) return "";
         const info = `Title: ${purchase.title}\nAuthor: ${purchase.author_name}\nPublisher: ${purchase.publisher_name}\nGenre: ${purchase.genre}\nCategory: ${purchase.category}\nPublication Date: ${formatDate(purchase.publication_date)}\nPrice at the moment: ${purchase.price} ₴\nPages: ${purchase.pages}\nLanguage: ${purchase.language}\nSummary: ${purchase.summary}\nRating: ${purchase.rating}`;
@@ -109,31 +127,58 @@ function CustomerProfile() {
         }
     }, []);
 
+
+    /**
+     * Formats a date string into a human-readable format.
+     *
+     * @param {string} dateString - The date string to format.
+     * @returns {string} The formatted date string.
+     */
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString("EN-us", options);
     };
 
+
+    /**
+     * Handles opening the purchase popup and fetching purchases data.
+     */
     const handleOpenPopup = () => {
         setSelectedCheck(checks[currentCheckIndex]);
         fetchPurchases();
         setShowPopup(true);
     };
 
+    /**
+     * Handles closing the purchase popup and resetting purchases state.
+     */
     const handleClosePopup = () => {
         setSelectedCheck(null);
         setPurchases([]);
         setShowPopup(false);
     };
 
+    /**
+     * Handles moving to the next check in the checks array.
+     */
     const handleNextCheck = () => {
         setCurrentCheckIndex((prevIndex) => (prevIndex + 1) % checks.length);
     };
 
+
+    /**
+     * Handles moving to the previous check in the checks array.
+     */
     const handlePreviousCheck = () => {
         setCurrentCheckIndex((prevIndex) => (prevIndex - 1 + checks.length) % checks.length);
     };
 
+    /**
+     * Retrieves the color code based on the status of the order.
+     *
+     * @param {string} status - The status of the order.
+     * @returns {string} The color code associated with the status.
+     */
     function getStatusColor(status) {
         switch (status) {
             case 'pending':
@@ -147,6 +192,12 @@ function CustomerProfile() {
         }
     }
 
+
+    /**
+     * Handles deleting a check.
+     *
+     * @param {string} checkNumber - The check number to delete.
+     */
     const handleDelete = async (checkNumber) => {
         try {
             const response = await fetch(`http://localhost:8081/delete-check/${checkNumber}`, { method: 'DELETE' });
@@ -160,6 +211,11 @@ function CustomerProfile() {
         }
     };
 
+    /**
+     * Handles changing the password.
+     *
+     * @param {Event} e - The event object.
+     */
     const handleChangePassword = async (e) => {
         e.preventDefault();
 
@@ -205,14 +261,24 @@ function CustomerProfile() {
         setConfirmPassword('');
     };
 
+    /**
+     * Handles opening the password popup.
+     */
     const handleOpenPasswordPopup = () => {
         setShowPasswordPopup(true);
     };
 
+    /**
+     * Handles closing the password popup.
+     */
     const handleClosePasswordPopup = () => {
         setShowPasswordPopup(false);
     };
 
+
+    /**
+     * Handles opening the profile edit popup.
+     */
     const handleOpenProfileEditPopup = () => {
         setUpdatedProfile({
             cust_name: profile.cust_name,
@@ -226,10 +292,18 @@ function CustomerProfile() {
         setShowProfileEditPopup(true);
     };
 
+    /**
+     * Handles closing the profile edit popup.
+     */
     const handleCloseProfileEditPopup = () => {
         setShowProfileEditPopup(false);
     };
 
+    /**
+     * Handles changes in the profile edit form inputs.
+     *
+     * @param {Event} e - The event object.
+     */
     const handleProfileChange = (e) => {
         const { name, value } = e.target;
         setUpdatedProfile((prevProfile) => ({
@@ -242,6 +316,11 @@ function CustomerProfile() {
     const supabase = createClient('https://upkigeauanwefsngyhqb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwa2lnZWF1YW53ZWZzbmd5aHFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYyMjQxOTQsImV4cCI6MjAzMTgwMDE5NH0.s60GCwAeFC5zdmGKiJ0oxm7WXf2gcsCUWkUhEguUlvM');
 
 
+    /**
+     * Handles updating the profile.
+     *
+     * @param {Event} e - The event object.
+     */
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
         try {
