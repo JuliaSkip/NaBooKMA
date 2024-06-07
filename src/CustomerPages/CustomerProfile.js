@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import MenuBar from "../MenuBar/MenuBar";
 import "./CustomerProfileStyles.css";
 import bcrypt from "bcryptjs";
-import {createClient} from "@supabase/supabase-js";
-
+import { getSupabaseClient } from '../authclient';
+const supabase = getSupabaseClient();
 function CustomerProfile() {
     const [profile, setProfile] = useState([]);
     const [checks, setChecks] = useState([]);
@@ -219,15 +219,8 @@ function CustomerProfile() {
     const handleChangePassword = async (e) => {
         e.preventDefault();
 
-        console.log(currentPassword)
-        console.log(newPassword)
         if (newPassword !== confirmPassword) {
             window.alert('New passwords do not match.');
-            return;
-        }
-
-        if (newPassword.length < 6) {
-            window.alert('New password must be at least 6 characters long.');
             return;
         }
 
@@ -311,10 +304,6 @@ function CustomerProfile() {
             [name]: value
         }));
     };
-
-
-    const supabase = createClient('https://upkigeauanwefsngyhqb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwa2lnZWF1YW53ZWZzbmd5aHFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYyMjQxOTQsImV4cCI6MjAzMTgwMDE5NH0.s60GCwAeFC5zdmGKiJ0oxm7WXf2gcsCUWkUhEguUlvM');
-
 
     /**
      * Handles updating the profile.

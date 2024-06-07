@@ -6,8 +6,9 @@ import forKidsImage from "../BooksPage/for-kids.png";
 import romanceImage from "../BooksPage/romance.png";
 import nonFictionImage from "../BooksPage/non-fiction.png";
 import allImage from "../BooksPage/all.png";
-import { createClient } from "@supabase/supabase-js";
+import { getSupabaseClient } from '../authclient';
 
+const supabase = getSupabaseClient();
 
 function BooksPage() {
     const [fetchError, setFetchError] = useState(null);
@@ -48,9 +49,6 @@ function BooksPage() {
         language: "",
         category: ""
     });
-
-    const supabase = createClient('https://upkigeauanwefsngyhqb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwa2lnZWF1YW53ZWZzbmd5aHFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYyMjQxOTQsImV4cCI6MjAzMTgwMDE5NH0.s60GCwAeFC5zdmGKiJ0oxm7WXf2gcsCUWkUhEguUlvM');
-
 
     /**
      * Fetches book data from the specified endpoint and updates the state with the fetched data.
@@ -116,7 +114,7 @@ function BooksPage() {
      */
     const handleEditBookSubmit = async (e) => {
         e.preventDefault();
-        let photoUrl = "https://upkigeauanwefsngyhqb.supabase.co/storage/v1/object/public/photos/default-book-icon.png"
+        let photoUrl = popupBook.book_photo_url;
         if (photo) {
             const { data, error } = await supabase.storage
                 .from('photos')
@@ -351,7 +349,7 @@ function BooksPage() {
         const matchesAuthor = book.author_name.toLowerCase().startsWith(searchAuthor.toLowerCase());
         const matchesGenre = book.genre.toLowerCase().startsWith(searchGenre.toLowerCase());
         const matchesPrice = searchPrice ? book.price <= parseFloat(searchPrice) : true;
-        const matchesRating = searchRating ? book.rating <= parseFloat(searchRating) : true;
+        const matchesRating = searchRating ? book.rating = parseFloat(searchRating) : true;
         const matchesYear = searchYear ? book.publication_date.startsWith(searchYear) : true;
         const matchesLanguage = language === "all" || book.language === language;
         const matchesCategory = category === "all" || book.category === category;
@@ -530,7 +528,7 @@ function BooksPage() {
                     />
                     <input
                         type="number"
-                        value={searchYear}
+                        value={searchRating}
                         onChange={handleSearchRating}
                         placeholder="Search by rating..."
                     />

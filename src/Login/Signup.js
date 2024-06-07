@@ -2,8 +2,9 @@ import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import './Signup.css';
 import bcrypt from "bcryptjs";
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '../authclient';
 
+const supabase = getSupabaseClient();
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -25,9 +26,6 @@ const Signup = () => {
     const [passwordMatchError, setPasswordMatchError] = useState(false);
 
     const [customers, setCustomers] = useState([]);
-
-
-    const supabase = createClient('https://upkigeauanwefsngyhqb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwa2lnZWF1YW53ZWZzbmd5aHFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYyMjQxOTQsImV4cCI6MjAzMTgwMDE5NH0.s60GCwAeFC5zdmGKiJ0oxm7WXf2gcsCUWkUhEguUlvM');
 
     /**
      * Fetches initial customers data when the component mounts.
@@ -55,7 +53,9 @@ const Signup = () => {
         fetchCustomers();
     }, []);
 
-
+    useEffect(() => {
+        fetchNewCustomer(email);
+    }, [customers]);
     const validateEmail = (e) => {
         if (e && customers.find(customer => customer.customer_email === e)) {
             window.alert("This email address already exists.");
@@ -191,11 +191,25 @@ const Signup = () => {
             if (!response.ok) {
                 throw new Error('An error occurred while registration. Please try again.');
             }
-            localStorage.setItem('email', email)
-            //localStorage.setItem('id', customer_id)
+
             navigate('/nabookma');
         } catch (error) {
             window.alert(error);
+        }
+    };
+
+    const fetchNewCustomer = async (email) => {
+        try {
+            const response = await fetch(`http://localhost:8081/get-customer-by-email?email=${email}`);
+            if (!response.ok) {
+                throw new Error("Could not fetch new customer data");
+            }
+            const data = await response.json();
+            localStorage.setItem('email', email);
+            localStorage.setItem('id', data[0].customer_id);
+            navigate('/nabookma');
+        } catch (error) {
+            window.alert(error.message);
         }
     };
 

@@ -262,7 +262,6 @@ function PurchasesPage() {
             <button className="sort-checks" onClick={() => handleSort("check_number")}>
                 Sort by check number
             </button>
-
             {searchQuery === "" && (
                 <select className="sort-checks" value={filter}
                         onChange={(e) => handleFilter(e.target.value)}>
