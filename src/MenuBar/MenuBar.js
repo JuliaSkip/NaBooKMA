@@ -129,57 +129,61 @@ const MenuBar = ({length_b}) => {
      * This function creates a check, adds purchases for each item in the basket, and clears the basket.
      */
     const handleOrder = async () => {
-        const confirmed = window.confirm("Are you sure you want to make an order?");
-        if (confirmed) {
-            try {
-                const checkResponse = await fetch("http://localhost:8081/create-check", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        total_price: 0,
-                        customer_id: id,
-                        print_date: new Date().toISOString(),
-                        status: 'pending'
-                    })
-                });
-
-                if (!checkResponse.ok) {
-                    throw new Error("Could not create check");
-                }
-
-                const checkData = await checkResponse.json();
-                const checkNumber = checkData.check_number;
-
-                for (const book of basket) {
-                    const purchaseResponse = await fetch("http://localhost:8081/add-purchase", {
+        if(basket.length === 0){
+            window.alert("Your basket is empty!")
+        }else {
+            const confirmed = window.confirm("Are you sure you want to make an order?");
+            if (confirmed) {
+                try {
+                    const checkResponse = await fetch("http://localhost:8081/create-check", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify({
-                            book_id: book.book_id,
-                            check_number: checkNumber,
-                            quantity: book.amount,
-                            selling_price: 0
+                            total_price: 0,
+                            customer_id: id,
+                            print_date: new Date().toISOString(),
+                            status: 'pending'
                         })
                     });
 
-                    if (!purchaseResponse.ok) {
-                        throw new Error("Could not add purchase");
+                    if (!checkResponse.ok) {
+                        throw new Error("Could not create check");
                     }
 
-                    handleDelete(book.id, book.title);
+                    const checkData = await checkResponse.json();
+                    const checkNumber = checkData.check_number;
+
+                    for (const book of basket) {
+                        const purchaseResponse = await fetch("http://localhost:8081/add-purchase", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                book_id: book.book_id,
+                                check_number: checkNumber,
+                                quantity: book.amount,
+                                selling_price: 0
+                            })
+                        });
+
+                        if (!purchaseResponse.ok) {
+                            throw new Error("Could not add purchase");
+                        }
+
+                        handleDelete(book.id, book.title);
+                    }
+
+                    setBasket([]);
+                    setShowPopup(false);
+                    alert("Order placed successfully!");
+
+                } catch (error) {
+                    console.error("Error placing order:", error.message);
+                    alert("Error placing order. Please try again.");
                 }
-
-                setBasket([]);
-                setShowPopup(false);
-                alert("Order placed successfully!");
-
-            } catch (error) {
-                console.error("Error placing order:", error.message);
-                alert("Error placing order. Please try again.");
             }
         }
     };

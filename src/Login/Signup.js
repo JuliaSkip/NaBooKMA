@@ -53,9 +53,6 @@ const Signup = () => {
         fetchCustomers();
     }, []);
 
-    useEffect(() => {
-        fetchNewCustomer(email);
-    }, [customers]);
     const validateEmail = (e) => {
         if (e && customers.find(customer => customer.customer_email === e)) {
             window.alert("This email address already exists.");
@@ -192,6 +189,7 @@ const Signup = () => {
                 throw new Error('An error occurred while registration. Please try again.');
             }
 
+            fetchNewCustomer(email)
             navigate('/nabookma');
         } catch (error) {
             window.alert(error);
@@ -216,6 +214,23 @@ const Signup = () => {
     const handleCancel = () => {
         navigate('/')
     };
+
+    function getMinAllowedDate() {
+        const today = new Date();
+        const year = today.getFullYear() - 18;
+        let month = today.getMonth() + 1;
+        let day = today.getDate();
+
+        if (month < 10) {
+            month = `0${month}`;
+        }
+        if (day < 10) {
+            day = `0${day}`;
+        }
+
+        return `${year}-${month}-${day}`;
+    }
+
 
     return (
         <div className="registration-form-container">
@@ -268,6 +283,7 @@ const Signup = () => {
                                 id="birthDate"
                                 value={birthDate}
                                 onChange={(e) => setBirthDate(e.target.value)}
+                                max={getMinAllowedDate()}
                                 required
                             />
 
