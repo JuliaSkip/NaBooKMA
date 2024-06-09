@@ -12,6 +12,7 @@ function PurchasesPage() {
     const [sortOrder, setSortOrder] = useState("ASC");
     const [searchQuery, setSearchQuery] = useState("");
     const [filter, setFilter] = useState("all");
+    const [customerFilter, setCustomerFilter] = useState("");
     const [allCustomers, setAllCustomers] = useState([]);
     const [month, setMonth] = useState("");
     const [year, setYear] = useState("");
@@ -177,8 +178,9 @@ function PurchasesPage() {
         const matchesYear = year ? checkDate.getFullYear() === parseInt(year) : true;
         const matchesSearch = searchQuery.trim() === '' ? true : check.check_number.toString().trim() === searchQuery.trim();
         const matchesFilter = filter === "all" ? true : check.status === filter;
+        const matchesCustomer = customerFilter.trim() === '' ? true : check.cust_surname.toLowerCase().startsWith(customerFilter.toLowerCase());
 
-        return matchesMonth && matchesYear && matchesSearch && matchesFilter;
+        return matchesMonth && matchesYear && matchesSearch && matchesFilter && matchesCustomer;
     }) : [];
 
     /**
@@ -195,6 +197,10 @@ function PurchasesPage() {
 
     const handleYearChange = (e) => {
         setYear(e.target.value);
+    };
+
+    const handleCustomerFilterChange = (e) => {
+        setCustomerFilter(e.target.value);
     };
 
     /**
@@ -250,12 +256,19 @@ function PurchasesPage() {
     return (
         <div className="entire-page">
             <MenuBar/>
-            <div>
+            <div className="searches">
                 <input
                     type="text"
                     placeholder="Search check by number..."
                     value={searchQuery}
                     onChange={handleSearch}
+                    className="search-bar-checks"
+                />
+                <input
+                    type="text"
+                    placeholder="Search by customer surname..."
+                    value={customerFilter}
+                    onChange={handleCustomerFilterChange}
                     className="search-bar-checks"
                 />
             </div>

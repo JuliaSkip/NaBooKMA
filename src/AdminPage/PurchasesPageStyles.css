@@ -1,7 +1,8 @@
 .search-bar-checks {
-    width: 32.2%;
+    width: 15%;
     padding: 10px;
     margin-bottom: 20px;
+    margin-left: 20px;
     border: 1px solid #f1daae;
     background-color: #f1daae;
     border-radius: 10px;
@@ -9,6 +10,9 @@
     position: relative;
     top: 100px;
     left: 10.25%;
+}
+.searches{
+    margin-left: -20px;
 }
 .search-bar-checks:focus {
     border: 2px solid black;
