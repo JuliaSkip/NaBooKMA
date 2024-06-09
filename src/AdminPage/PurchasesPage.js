@@ -275,15 +275,14 @@ function PurchasesPage() {
             <button className="sort-checks" onClick={() => handleSort("check_number")}>
                 Sort by check number
             </button>
-            {searchQuery === "" && (
-                <select className="sort-checks" value={filter}
-                        onChange={(e) => handleFilter(e.target.value)}>
-                    <option value="all">All statuses</option>
-                    <option value="pending">Pending</option>
-                    <option value="processing">Processing</option>
-                    <option value="completed">Completed</option>
-                </select>
-            )}
+
+            <select className="sort-checks" value={filter}
+                    onChange={(e) => handleFilter(e.target.value)}>
+                <option value="all">All statuses</option>
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="completed">Completed</option>
+            </select>
 
             <select className="sort-checks" value={month} onChange={handleMonthChange}>
                 <option value="">All months</option>
@@ -301,7 +300,7 @@ function PurchasesPage() {
             </select>
 
             <div className="check page">
-                <h3>Total sum: {totalSum} $</h3>
+                <h3>Total sum: {totalSum.toFixed(2)} $</h3>
                 <div className="check-cards">
                     {filteredChecks.map((check) => (
                         <div>

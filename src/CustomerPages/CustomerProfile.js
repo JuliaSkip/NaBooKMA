@@ -318,7 +318,7 @@ function CustomerProfile() {
             if (photo) {
                 const { data, error } = await supabase.storage
                     .from('customers')
-                    .upload(`public/${photo.name}`, photo, {
+                    .upload(`${photo.name}`, photo, {
                         cacheControl: '3600',
                         upsert: false,
                     });
@@ -474,7 +474,7 @@ function CustomerProfile() {
                                                                 <p className="amount">
                                                                     {purchase.selling_price} x {purchase.quantity}
                                                                 </p>
-                                                                <p>{(purchase.selling_price * purchase.quantity).toFixed(2)} ₴</p>
+                                                                <p>{(purchase.selling_price * purchase.quantity).toFixed(2)} $</p>
                                                             </div>
                                                         </div>
                                                     ))}
@@ -485,7 +485,7 @@ function CustomerProfile() {
                                                 <div className="payment-details">
                                                     <div className="item">
                                                         <h2>Total:</h2>
-                                                        <h2>{selectedCheck.total_price} ₴</h2>
+                                                        <h2>{selectedCheck.total_price} $</h2>
                                                     </div>
                                                 </div>
                                                 <div className="zigzag-bottom"></div>

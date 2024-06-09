@@ -349,7 +349,7 @@ function BooksPage() {
         const matchesAuthor = book.author_name.toLowerCase().startsWith(searchAuthor.toLowerCase());
         const matchesGenre = book.genre.toLowerCase().startsWith(searchGenre.toLowerCase());
         const matchesPrice = searchPrice ? book.price <= parseFloat(searchPrice) : true;
-        const matchesRating = searchRating ? book.rating = parseFloat(searchRating) : true;
+        const matchesRating = searchRating ? book.rating === parseFloat(searchRating) : true;
         const matchesYear = searchYear ? book.publication_date.startsWith(searchYear) : true;
         const matchesLanguage = language === "all" || book.language === language;
         const matchesCategory = category === "all" || book.category === category;
@@ -860,6 +860,8 @@ function BooksPage() {
                                         name="rating"
                                         value={popupBook.rating}
                                         onChange={handleEditBookChange}
+                                        min="0"
+                                        max="5" step="1"
                                         required
                                     />
                                     <input
