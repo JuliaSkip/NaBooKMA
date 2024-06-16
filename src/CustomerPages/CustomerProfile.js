@@ -3,7 +3,9 @@ import MenuBar from "../MenuBar/MenuBar";
 import "./CustomerProfileStyles.css";
 import bcrypt from "bcryptjs";
 import { getSupabaseClient } from '../authclient';
+import ConfirmationModal from "../MenuBar/Confirm";
 const supabase = getSupabaseClient();
+
 function CustomerProfile() {
     const [profile, setProfile] = useState([]);
     const [checks, setChecks] = useState([]);
@@ -29,6 +31,14 @@ function CustomerProfile() {
         city: '',
         street: '',
         zip_code: ''
+    });
+
+
+    const [confirmationModal, setConfirmationModal] = useState({
+        show: false,
+        message: '',
+        onConfirm: null,
+        onCancel: null
     });
 
     /**
@@ -199,15 +209,26 @@ function CustomerProfile() {
      * @param {string} checkNumber - The check number to delete.
      */
     const handleDelete = async (checkNumber) => {
+        setConfirmationModal({
+            show: true,
+            message: 'Are you sure you want to cancel this order?',
+            onConfirm: () => confirmDelete(checkNumber),
+            onCancel: () => setConfirmationModal({ ...confirmationModal, show: false })
+        });
+    };
+
+    const confirmDelete = async (checkNumber) => {
         try {
             const response = await fetch(`http://localhost:8081/delete-check/${checkNumber}`, { method: 'DELETE' });
             if (!response.ok) {
                 throw new Error('Could not delete check');
             }
             fetchOrders(email);
-            setCurrentCheckIndex(currentCheckIndex-1)
+            setCurrentCheckIndex(currentCheckIndex - 1);
         } catch (error) {
             console.error(error.message);
+        } finally {
+            setConfirmationModal({ ...confirmationModal, show: false });
         }
     };
 
@@ -359,7 +380,7 @@ function CustomerProfile() {
 
 
     return (
-        <div className="entire-page">
+        <div className="entire-page-cust">
             <MenuBar length_b={basket.length}/>
             <div className="dashboard">
                 {email !== "admin@ukma.edu.ua" ? (
@@ -626,6 +647,13 @@ function CustomerProfile() {
                     </div>
                 )}
             </div>
+            {confirmationModal.show && (
+                <ConfirmationModal
+                    message={confirmationModal.message}
+                    onConfirm={confirmationModal.onConfirm}
+                    onCancel={confirmationModal.onCancel}
+                />
+            )}
         </div>
     );
 }

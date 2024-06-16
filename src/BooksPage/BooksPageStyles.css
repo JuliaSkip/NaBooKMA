@@ -1,6 +1,8 @@
 .entire-page{
     position: relative;
     top: 50px;
+    left: 10%;
+    margin-right: 20%;
 }
 .search-container input {
     width: 150px;
@@ -454,7 +456,7 @@ body{
 }
 
 @media only screen and (max-width: 992px) {
-    .search-bar-books, .sort-books, .language-select{
+    .search-bar, .sort-books, .language-select{
         width: 80%;
         left: 10%;
     }

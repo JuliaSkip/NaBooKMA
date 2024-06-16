@@ -3,12 +3,17 @@ import nabookma from './NaBOOKMA__1_-removebg-preview.png'
 import {NavLink} from "react-router-dom";
 import basketIcon from './basket.png';
 import React, {useEffect, useState} from "react";
+import ConfirmationModal from '../MenuBar/Confirm';
+
 
 const MenuBar = ({length_b}) => {
     const [showPopup, setShowPopup] = useState(false);
     const [basket, setBasket] = useState([]);
     const [id, setId] = useState(null);
     const [email, setEmail] = useState(null);
+    const [confirmation, setConfirmation] = useState({ show: false, message: "", onConfirm: null, onCancel: null });
+
+
 
 
     /**
@@ -79,20 +84,27 @@ const MenuBar = ({length_b}) => {
         }
     };
 
-    const handleDelete = async (bookId, bookTitle) => {
-        const confirmed = window.confirm("Remove \""+ bookTitle+"\" from your basket?");
-        if (confirmed) {
-            try {
-                const response = await fetch(`http://localhost:8081/delete-book-from-basket/${bookId}`, {
-                    method: "DELETE"
-                });
-                if (!response.ok) {
-                    throw new Error("Could not delete book from basket");
-                }
-                fetchBasket(email);
-            } catch (error) {
-                console.error("Error deleting book from basket:", error.message);
+    const handleDelete = (bookId, bookTitle) => {
+        setConfirmation({
+            show: true,
+            message: `Remove "${bookTitle}" from your basket?`,
+            onConfirm: () => confirmDelete(bookId),
+            onCancel: () => setConfirmation({ show: false, message: "", onConfirm: null, onCancel: null })
+        });
+    };
+
+    const confirmDelete = async (bookId) => {
+        setConfirmation({ show: false, message: "", onConfirm: null, onCancel: null });
+        try {
+            const response = await fetch(`http://localhost:8081/delete-book-from-basket/${bookId}`, {
+                method: "DELETE"
+            });
+            if (!response.ok) {
+                throw new Error("Could not delete book from basket");
             }
+            fetchBasket(email);
+        } catch (error) {
+            console.error("Error deleting book from basket:", error.message);
         }
     };
 
@@ -128,63 +140,78 @@ const MenuBar = ({length_b}) => {
      * Handles placing an order for the items in the basket.
      * This function creates a check, adds purchases for each item in the basket, and clears the basket.
      */
-    const handleOrder = async () => {
-        if(basket.length === 0){
-            window.alert("Your basket is empty!")
-        }else {
-            const confirmed = window.confirm("Are you sure you want to make an order?");
-            if (confirmed) {
-                try {
-                    const checkResponse = await fetch("http://localhost:8081/create-check", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            total_price: 0,
-                            customer_id: id,
-                            print_date: new Date().toISOString(),
-                            status: 'pending'
-                        })
-                    });
 
-                    if (!checkResponse.ok) {
-                        throw new Error("Could not create check");
-                    }
+    const handleOrder = () => {
+        if (basket.length === 0) {
+            window.alert("Your basket is empty!");
+        } else {
+            setConfirmation({
+                show: true,
+                message: "Are you sure you want to make an order?",
+                onConfirm: confirmOrder,
+                onCancel: () => setConfirmation({ show: false, message: "", onConfirm: null, onCancel: null })
+            });
+        }
+    };
 
-                    const checkData = await checkResponse.json();
-                    const checkNumber = checkData.check_number;
+    const confirmOrder = async () => {
+        setConfirmation({ show: false, message: "", onConfirm: null, onCancel: null });
+        try {
+            const checkResponse = await fetch("http://localhost:8081/create-check", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    total_price: 0,
+                    customer_id: id,
+                    print_date: new Date().toISOString(),
+                    status: 'pending'
+                })
+            });
 
-                    for (const book of basket) {
-                        const purchaseResponse = await fetch("http://localhost:8081/add-purchase", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                book_id: book.book_id,
-                                check_number: checkNumber,
-                                quantity: book.amount,
-                                selling_price: 0
-                            })
-                        });
-
-                        if (!purchaseResponse.ok) {
-                            throw new Error("Could not add purchase");
-                        }
-
-                        handleDelete(book.id, book.title);
-                    }
-
-                    setBasket([]);
-                    setShowPopup(false);
-                    alert("Order placed successfully!");
-
-                } catch (error) {
-                    console.error("Error placing order:", error.message);
-                    alert("Error placing order. Please try again.");
-                }
+            if (!checkResponse.ok) {
+                throw new Error("Could not create check");
             }
+
+            const checkData = await checkResponse.json();
+            const checkNumber = checkData.check_number;
+
+            for (const book of basket) {
+                const purchaseResponse = await fetch("http://localhost:8081/add-purchase", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        book_id: book.book_id,
+                        check_number: checkNumber,
+                        quantity: book.amount,
+                        selling_price: 0
+                    })
+                });
+
+                if (!purchaseResponse.ok) {
+                    throw new Error("Could not add purchase");
+                }
+
+                confirmDelete(book.id);
+            }
+
+            setBasket([]);
+            setShowPopup(false);
+            setConfirmation({
+                show: true,
+                message: "Order placed successfully!",
+                onConfirm: () => {
+                    setConfirmation({ show: false, message: "", onConfirm: null, onCancel: null });
+                },
+                onCancel: null
+            });
+
+        } catch (error) {
+            console.error("Error placing order:", error.message);
+            alert("Error placing order. Please try again.");
         }
     };
 
@@ -200,6 +227,13 @@ const MenuBar = ({length_b}) => {
 
     return (
         <div>
+            {confirmation.show && (
+                <ConfirmationModal
+                    message={confirmation.message}
+                    onConfirm={confirmation.onConfirm}
+                    onCancel={confirmation.onCancel}
+                />
+            )}
             {showPopup && (
                 <div className="overlay-basket show">
                     <div className="basket-content">
@@ -277,3 +311,5 @@ const MenuBar = ({length_b}) => {
 };
 
 export default MenuBar;
+
+

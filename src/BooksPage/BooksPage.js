@@ -7,6 +7,8 @@ import romanceImage from "../BooksPage/romance.png";
 import nonFictionImage from "../BooksPage/non-fiction.png";
 import allImage from "../BooksPage/all.png";
 import { getSupabaseClient } from '../authclient';
+import ConfirmationModal from '../MenuBar/Confirm';
+
 
 const supabase = getSupabaseClient();
 
@@ -34,6 +36,28 @@ function BooksPage() {
     const [searchRating, setSearchRating] = useState("");
 
     const [basket, setBasket] = useState([]);
+
+    const [confirmationMessage, setConfirmationMessage] = useState("");
+    const [confirmationAction, setConfirmationAction] = useState(null);
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
+    const showConfirmation = (message, action) => {
+        setConfirmationMessage(message);
+        setConfirmationAction(() => action);
+        setShowConfirmationModal(true);
+    };
+
+    const handleConfirm = () => {
+        if (confirmationAction) {
+            confirmationAction();
+        }
+        setShowConfirmationModal(false);
+    };
+
+    const handleCancel = () => {
+        setShowConfirmationModal(false);
+    };
+
 
     const [newBook, setNewBook] = useState({
         id_book: "",
@@ -321,9 +345,8 @@ function BooksPage() {
      * This function is triggered when a book is to be deleted. It sends a DELETE request to remove
      * the book. If the request is successful, it fetches the updated books and closes any open popups.
      */
-    const handleDeleteBook = async (bookId) => {
-        const confirmed = window.confirm("Are you sure you want to delete this book?");
-        if (confirmed) {
+    const handleDeleteBook = (bookId) => {
+        showConfirmation("Are you sure you want to delete this book?", async () => {
             try {
                 const response = await fetch(`http://localhost:8081/delete-book/${bookId}`, {
                     method: "DELETE"
@@ -336,7 +359,7 @@ function BooksPage() {
             } catch (error) {
                 console.error("Error deleting book:", error.message);
             }
-        }
+        });
     };
 
     /**
@@ -476,30 +499,28 @@ function BooksPage() {
      * This function is triggered when the add to basket button is clicked. It sends a POST request to add
      * the selected book to the basket. If the request is successful, it fetches the updated basket data.
      */
-    const handleAddToBasket = async (e, book) => {
-        const confirmed = window.confirm("Are you sure you want to add this book to basket?");
-        if (confirmed) {
+    const handleAddToBasket = (e, book) => {
         e.stopPropagation();
-        try {
-            const response = await fetch("http://localhost:8081/add-book-to-basket", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    book_id: book.book_id,
-                    customer_id: id,
-                })
-            });
-            if (!response.ok) {
-                throw new Error("Could not add book");
+        showConfirmation("Are you sure you want to add this book to basket?", async () => {
+            try {
+                const response = await fetch("http://localhost:8081/add-book-to-basket", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        book_id: book.book_id,
+                        customer_id: id,
+                    })
+                });
+                if (!response.ok) {
+                    throw new Error("Could not add book");
+                }
+                fetchBasket(email);
+            } catch (error) {
+                console.error("Error adding book:", error.message);
             }
-            fetchBasket(email)
-        } catch (error) {
-            console.error("Error adding book:", error.message);
-        }
-        }
-
+        });
     };
 
 
@@ -531,12 +552,18 @@ function BooksPage() {
                         value={searchRating}
                         onChange={handleSearchRating}
                         placeholder="Search by rating..."
+                        min="0"
+                        max="5" step="1"
+                        required
                     />
                     <input
                         type="number"
                         value={searchYear}
                         onChange={handleSearchYear}
                         placeholder="Search by year..."
+                        min="0"
+                        max="2024" step="1"
+                        required
                     />
                 </div>
                 <select className="language-select" id="sort-books" value={`${sortBy}-${sortOrder}`}
@@ -926,6 +953,13 @@ function BooksPage() {
                         <p>Phone: +1234567890</p>
                     </div>
                 </footer>}
+            {showConfirmationModal && (
+                <ConfirmationModal
+                    message={confirmationMessage}
+                    onConfirm={handleConfirm}
+                    onCancel={handleCancel}
+                />
+            )}
         </div>
     );
 }

@@ -166,7 +166,7 @@ button {
 }
 
 @media (max-width: 1220px) {
-    .entire-page{
+    .entire-page-cust{
         position: relative;
         margin-top: 80px;
     }
@@ -178,7 +178,7 @@ button {
 
 
 @media (max-width: 750px) {
-    .entire-page{
+    .entire-page-cust{
         position: relative;
         margin-top: 190px;
     }
@@ -188,14 +188,14 @@ button {
 }
 
 @media (max-width: 610px) {
-    .entire-page{
+    .entire-page-cust{
         position: relative;
         margin-top: 240px;
     }
 }
 
 @media (max-width: 465px) {
-    .entire-page{
+    .entire-page-cust{
         position: relative;
         margin-top: 370px;
     }

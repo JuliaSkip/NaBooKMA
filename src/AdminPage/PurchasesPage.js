@@ -1,6 +1,8 @@
 import MenuBar from "../MenuBar/MenuBar";
 import React, { useEffect, useState } from "react";
 import "./PurchasesPageStyles.css";
+import ConfirmationModal from "../MenuBar/Confirm"; // Import the ConfirmationModal component
+
 
 function PurchasesPage() {
     const [fetchError, setFetchError] = useState(null);
@@ -16,7 +18,8 @@ function PurchasesPage() {
     const [allCustomers, setAllCustomers] = useState([]);
     const [month, setMonth] = useState("");
     const [year, setYear] = useState("");
-
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [checkToDelete, setCheckToDelete] = useState(null);
 
     /**
      * Fetches check data from the specified endpoint and updates the state with the fetched data.
@@ -236,20 +239,30 @@ function PurchasesPage() {
      * This function sends a DELETE request to delete a specific check. If the request is successful,
      * it fetches the updated checks. If the request fails, it logs an error message.
      */
-    const handleDelete = async (checkNumber) =>{
-        const confirmed = window.confirm("Are you sure you want to delete this check?");
-        if (confirmed) {
-            try {
-                const response = await fetch(`http://localhost:8081/delete-check/${checkNumber}`, {method: 'DELETE'});
-                if (!response.ok) {
-                    throw new Error('Could not delete check');
-                }
-                fetchChecks();
-            } catch (error) {
-                console.error(error.message);
+    const handleDelete = (checkNumber) => {
+        setCheckToDelete(checkNumber);
+        setShowConfirmationModal(true);
+    };
+
+    const confirmDelete = async () => {
+        try {
+            const response = await fetch(`http://localhost:8081/delete-check/${checkToDelete}`, {method: 'DELETE'});
+            if (!response.ok) {
+                throw new Error('Could not delete check');
             }
+            fetchChecks();
+        } catch (error) {
+            console.error(error.message);
+        } finally {
+            setShowConfirmationModal(false);
+            setCheckToDelete(null);
         }
-    }
+    };
+
+    const cancelDelete = () => {
+        setShowConfirmationModal(false);
+        setCheckToDelete(null);
+    };
 
     const totalSum = filteredChecks.reduce((sum, check) => parseFloat(sum) + parseFloat(check.total_price), 0);
 
@@ -423,6 +436,13 @@ function PurchasesPage() {
                     </footer>
                 )}
             </div>
+            {showConfirmationModal && (
+                <ConfirmationModal
+                    message="Are you sure you want to delete this check?"
+                    onConfirm={confirmDelete}
+                    onCancel={cancelDelete}
+                />
+            )}
         </div>
     );
 }
